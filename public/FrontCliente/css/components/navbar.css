@@ -1,0 +1,66 @@
+/* === NAVBAR STYLES === */
+.a-login{
+  z-index: 2000;
+}
+
+.floating-nav {
+  width: 85%;               
+  position: fixed;              
+  top: 0px;                     
+  left: 50%;                    
+  transform: translateX(-50%);  
+  background: transparent;
+  box-shadow: none;                  
+  z-index: 800;                
+  padding: 10px 20px;
+  height: 90px;
+  font-size: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.floating-nav .nav-link {
+  font-weight: 600;
+  color: #ffffff !important;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.floating-nav .nav-link::after {
+  transform: scale(1.05) 0.3s ease;
+}
+
+.floating-nav .nav-link:hover::after {
+  width: 100%;
+  transform: scale(1.05) 0.3s ease;
+}
+
+.floating-nav .nav-link:hover {
+   transform: scale(1.05);
+}
+
+.floating-nav .navbar-toggler {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1500;
+}
+
+.navbar.hidden {
+  transform: translateY(-100%);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo img {
+  width: 30px;
+}
+
+.logo span {
+  font-size: 1.3rem;
+  font-weight: 600;
+}

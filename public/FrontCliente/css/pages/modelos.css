@@ -1,0 +1,58 @@
+/* === PÁGINA MODELOS === */
+/* Background escuro para página de modelos */
+.modelos-page {
+  background-color: #0d1b2a;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+.modelos-page .page-title {
+  padding-top: 250px;
+  color: #ffffff;
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.modelos-page .modelo-card {
+  background-color: #1e2936;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modelos-page .modelo-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+
+.modelos-page .modelo-card .card-body {
+  background: #1e2936;
+  color: #ffffff;
+}
+
+.modelos-page .modelo-card .card-title {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.modelos-page .modelo-card .card-text {
+  color: rgba(255,255,255,0.85);
+}
+
+.modelos-page .price {
+  color: #00b4d8;
+  font-weight: 600;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .modelos-page .page-title {
+    padding-top: 100px;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+}

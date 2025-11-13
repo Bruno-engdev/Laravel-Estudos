@@ -1,0 +1,138 @@
+/* === PÁGINA INICIAL === */
+.hero {
+  text-align: center;
+  height: 790px;
+  padding: 100px 20px;
+  background: #c4c7c7;
+  color: rgb(5, 5, 5);
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+}
+
+.hero .carousel,
+.hero .carousel-inner,
+.hero.hero img {
+  height: 100vh;
+  width: 100%;
+  object-fit: cover;
+}
+
+.carousel-item {
+  opacity: 0.975;
+  transform: scale(1.05);
+  transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1),
+              opacity 0.6s ease;
+}
+
+.carousel-item.active {
+  opacity: 0.999;
+  transform: scale(1);
+}
+
+.carousel-item-next,
+.carousel-item-prev {
+  opacity: 0.95;
+  transform: scale(1.03);
+}
+
+.carousel-item-next.carousel-item-start,
+.carousel-item-prev.carousel-item-end {
+  opacity: 0.999;
+  transform: scale(1);
+}
+
+.hero .carousel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.carousel-item img {
+  height: 100vh;
+  object-fit: cover;
+}
+
+.carousel-caption {
+  opacity: 0;
+  transform: translateY(-30px);
+  transition: transform 0.6s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.6s ease;
+}
+
+.carousel-item.active .carousel-caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.carousel-caption h2 {
+  font-size: 2.5rem;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.carousel-caption p {
+  font-size: 1.2rem;
+  color: #ffffff;
+}
+
+/* Seção de serviços */
+.services {
+  margin-top: 200px;
+  text-align: center;
+  width: 100%;
+  background: #ffffff;
+}
+
+.services h2 {
+  font-size: 3rem;
+  margin-bottom: 30px;
+  color: #0d1b2a;
+}
+
+.veiculos {
+  background-color: #ffffff;
+  border-radius: 10px;
+}
+
+.veiculos h2 {
+  font-weight: 600;
+  color: #0d1b2a;
+  font-size: 2rem;
+}
+
+/* Preloader */
+#preloader {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: grid;
+  place-items: center;
+  z-index: 3000;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .6s ease, visibility .6s ease;
+}
+
+#preloader.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.preloader-logo {
+  width: 200px;
+  animation: pulseFade 2.4s ease-in-out infinite;
+}
+
+@keyframes pulseFade {
+  0%   { opacity: 0.25; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.25; }
+}

@@ -1,0 +1,60 @@
+/* === CARDS STYLES === */
+.vehicle-card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.vehicle-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.vehicle-card img {
+  height: 220px;
+  object-fit: cover;
+}
+
+.vehicle-card .card-body {
+  background: #fff;
+  padding: 20px;
+}
+
+.vehicle-card .btn {
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.vehicle-card .btn:hover {
+  background-color: #0096c7;
+  color: #fff;
+}
+
+/* Cards para tema escuro */
+.dark-theme .vehicle-card {
+  background-color: #1e2936;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.dark-theme .vehicle-card .card-body {
+  background: #1e2936;
+  color: #ffffff;
+}
+
+.scroll-cards {
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-cards .card {
+  scroll-snap-align: start;
+  border-radius: 10px;
+  transition: transform 0.2s;
+}
+
+.scroll-cards .card:hover {
+  transform: scale(1.03);
+}
