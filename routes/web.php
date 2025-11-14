@@ -6,6 +6,9 @@ use App\Http\Controllers\Cliente\ClienteFrontController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\VeiculoController;
+use App\Http\Controllers\MarcaController;
+use App\Http\Controllers\ModeloController;
+use App\Http\Controllers\CorController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -76,6 +79,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/clientes', [ClienteController::class, 'salvarCliente'])->name('clientes.store');
     Route::put('/clientes/{id}', [ClienteController::class, 'alterarCliente'])->name('clientes.update');
     Route::delete('/clientes/{id}', [ClienteController::class, 'deletarCliente'])->name('clientes.destroy');
+    
+    // Rotas CRUD de Veículos
+    Route::resource('veiculos', VeiculoController::class);
+    
+    // Rotas CRUD de Marcas
+    Route::resource('marcas', MarcaController::class);
+    
+    // Rotas CRUD de Modelos
+    Route::resource('modelos', ModeloController::class);
+    
+    // Rotas CRUD de Cores
+    Route::resource('cores', CorController::class);
 });
 
 /*

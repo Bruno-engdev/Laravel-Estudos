@@ -28,7 +28,7 @@
             border-radius: 20px;
             padding: 3rem;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 215, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             width: 100%;
             max-width: 450px;
             position: relative;
@@ -42,7 +42,7 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #FFD700, #FFA500, #FF8C00);
+            background: linear-gradient(90deg, #ffffff, #e0e0e0, #c0c0c0);
         }
 
         .admin-header {
@@ -51,7 +51,7 @@
         }
 
         .admin-icon {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
+            background: linear-gradient(135deg, #4a4a4a, #2a2a2a);
             width: 80px;
             height: 80px;
             border-radius: 50%;
@@ -59,16 +59,16 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto 1rem;
-            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
         }
 
         .admin-icon i {
             font-size: 2rem;
-            color: #1a1a1a;
+            color: #ffffff;
         }
 
         .admin-title {
-            color: #FFD700;
+            color: #ffffff;
             font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
@@ -84,7 +84,7 @@
         }
 
         .form-label {
-            color: #FFD700;
+            color: #ffffff;
             font-weight: 600;
             margin-bottom: 0.5rem;
             display: block;
@@ -92,7 +92,7 @@
 
         .form-control {
             background: rgba(45, 45, 45, 0.8);
-            border: 1px solid rgba(255, 215, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px;
             padding: 0.8rem 1rem;
             color: #ffffff;
@@ -102,8 +102,8 @@
 
         .form-control:focus {
             background: rgba(45, 45, 45, 0.9);
-            border-color: #FFD700;
-            box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+            border-color: #ffffff;
+            box-shadow: 0 0 0 0.2rem rgba(255, 255, 255, 0.15);
             color: #ffffff;
         }
 
@@ -112,13 +112,13 @@
         }
 
         .btn-admin {
-            background: linear-gradient(135deg, #FFD700, #FFA500);
+            background: linear-gradient(135deg, #4a4a4a, #2a2a2a);
             border: none;
             border-radius: 10px;
             padding: 0.8rem 2rem;
             font-weight: 600;
             font-size: 1rem;
-            color: #1a1a1a;
+            color: #ffffff;
             width: 100%;
             transition: all 0.3s ease;
             text-transform: uppercase;
@@ -126,17 +126,17 @@
         }
 
         .btn-admin:hover {
-            background: linear-gradient(135deg, #FFA500, #FF8C00);
+            background: linear-gradient(135deg, #3a3a3a, #1a1a1a);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.3);
-            color: #1a1a1a;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+            color: #ffffff;
         }
 
         .back-to-site {
             text-align: center;
             margin-top: 2rem;
             padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 215, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .back-link {
@@ -147,7 +147,7 @@
         }
 
         .back-link:hover {
-            color: #FFD700;
+            color: #ffffff;
         }
 
         .alert {

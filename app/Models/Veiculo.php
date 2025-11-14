@@ -12,12 +12,12 @@ class Veiculo extends Model
     protected $table = 'veiculos';
 
     protected $fillable = [
-        'marca',
-        'modelo',
+        'marca_id',
+        'modelo_id',
+        'cor_id',
         'ano_fabricacao',
         'ano_modelo',
         'placa',
-        'cor',
         'tipo',
         'chassi',
         'renavam',
@@ -33,7 +33,9 @@ class Veiculo extends Model
         'descricao',
         'observacoes',
         'data_aquisicao',
-        // 'cliente_id', // Descomente se houver relacionamento
+        'foto1',
+        'foto2',
+        'foto3',
     ];
 
     protected $casts = [
@@ -46,11 +48,29 @@ class Veiculo extends Model
         'data_aquisicao' => 'date',
     ];
 
-    // Relacionamento com Cliente (descomente se necessário)
-    // public function cliente()
-    // {
-    //     return $this->belongsTo(Cliente::class);
-    // }
+    /**
+     * Relacionamento com Marca
+     */
+    public function marca()
+    {
+        return $this->belongsTo(Marca::class);
+    }
+
+    /**
+     * Relacionamento com Modelo
+     */
+    public function modelo()
+    {
+        return $this->belongsTo(Modelo::class);
+    }
+
+    /**
+     * Relacionamento com Cor
+     */
+    public function cor()
+    {
+        return $this->belongsTo(Cor::class);
+    }
 
     // Accessor para formatar preço
     public function getPrecoVendaFormatadoAttribute()

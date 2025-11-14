@@ -15,11 +15,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Criar usuário admin
         User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+            'name' => 'Administrador',
+            'email' => 'admin@autoprime.com',
+            'password' => bcrypt('admin123'),
+        ]);
+
+        // Popular dados na ordem correta (devido às foreign keys)
+        $this->call([
+            MarcasSeeder::class,
+            CoresSeeder::class,
+            ModelosSeeder::class,  // Depende de Marcas
+            VeiculosSeeder::class, // Depende de Marcas, Modelos e Cores
         ]);
     }
 }

@@ -13,8 +13,9 @@ class ClienteFrontController extends Controller
      */
     public function home()
     {
-        // Pega os últimos 6 veículos disponíveis
-        $veiculos = Veiculo::where('status', 'Disponível')
+        // Pega os últimos 6 veículos disponíveis com relacionamentos
+        $veiculos = Veiculo::with(['marca', 'modelo', 'cor'])
+                          ->where('status', 'Disponível')
                           ->latest()
                           ->take(6)
                           ->get();
@@ -27,10 +28,11 @@ class ClienteFrontController extends Controller
      */
     public function modelos()
     {
-        // Pega todos os veículos disponíveis com paginação
-        $veiculos = Veiculo::where('status', 'Disponível')
-                          ->orderBy('marca')
-                          ->orderBy('modelo')
+        // Pega todos os veículos disponíveis com paginação e relacionamentos
+        $veiculos = Veiculo::with(['marca', 'modelo', 'cor'])
+                          ->where('status', 'Disponível')
+                          ->orderBy('marca_id')
+                          ->orderBy('modelo_id')
                           ->paginate(12);
         
         return view('cliente.modelos', compact('veiculos'));
@@ -41,10 +43,11 @@ class ClienteFrontController extends Controller
      */
     public function show($id)
     {
-        $veiculo = Veiculo::findOrFail($id);
+        $veiculo = Veiculo::with(['marca', 'modelo', 'cor'])->findOrFail($id);
         
         // Veículos relacionados (mesma marca)
-        $relacionados = Veiculo::where('marca', $veiculo->marca)
+        $relacionados = Veiculo::with(['marca', 'modelo', 'cor'])
+                              ->where('marca_id', $veiculo->marca_id)
                               ->where('id', '!=', $veiculo->id)
                               ->where('status', 'Disponível')
                               ->take(3)

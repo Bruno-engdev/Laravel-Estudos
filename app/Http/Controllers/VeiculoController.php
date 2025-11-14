@@ -6,6 +6,9 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Veiculo;
+use App\Models\Marca;
+use App\Models\Modelo;
+use App\Models\Cor;
 use Illuminate\Support\Facades\Validator;
 
 class VeiculoController extends Controller
@@ -15,8 +18,8 @@ class VeiculoController extends Controller
      */
     public function index()
     {
-        $veiculos = Veiculo::orderBy('created_at', 'desc')->paginate(10);
-        return view('veiculos.index', compact('veiculos'));
+        $veiculos = Veiculo::with(['marca', 'modelo', 'cor'])->orderBy('created_at', 'desc')->paginate(10);
+        return view('admin.veiculos.index', compact('veiculos'));
     }
 
     /**
@@ -24,7 +27,10 @@ class VeiculoController extends Controller
      */
     public function create()
     {
-        return view('veiculos.create');
+        $marcas = Marca::ativas()->orderBy('nome')->get();
+        $modelos = Modelo::ativas()->with('marca')->orderBy('nome')->get();
+        $cores = Cor::ativas()->orderBy('nome')->get();
+        return view('admin.veiculos.create', compact('marcas', 'modelos', 'cores'));
     }
 
     /**
@@ -33,12 +39,12 @@ class VeiculoController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'marca' => 'required|string|max:100',
-            'modelo' => 'required|string|max:100',
+            'marca_id' => 'required|exists:marcas,id',
+            'modelo_id' => 'required|exists:modelos,id',
+            'cor_id' => 'required|exists:cores,id',
             'ano_fabricacao' => 'required|integer|min:1900|max:' . (date('Y') + 1),
             'ano_modelo' => 'required|integer|min:1900|max:' . (date('Y') + 1),
             'placa' => 'nullable|string|max:10|unique:veiculos,placa',
-            'cor' => 'required|string|max:50',
             'tipo' => 'required|string|max:50',
             'combustivel' => 'required|string|max:50',
             'cambio' => 'required|string|max:50',
@@ -49,13 +55,16 @@ class VeiculoController extends Controller
             'status' => 'required|string|max:50',
             'categoria' => 'required|string|max:100',
             'quilometragem' => 'nullable|integer|min:0',
+            'foto1' => 'nullable|url|max:500',
+            'foto2' => 'nullable|url|max:500',
+            'foto3' => 'nullable|url|max:500',
         ], [
-            'marca.required' => 'O campo marca é obrigatório.',
-            'modelo.required' => 'O campo modelo é obrigatório.',
+            'marca_id.required' => 'O campo marca é obrigatório.',
+            'modelo_id.required' => 'O campo modelo é obrigatório.',
+            'cor_id.required' => 'O campo cor é obrigatório.',
             'ano_fabricacao.required' => 'O campo ano de fabricação é obrigatório.',
             'ano_modelo.required' => 'O campo ano do modelo é obrigatório.',
             'placa.unique' => 'Esta placa já está cadastrada.',
-            'cor.required' => 'O campo cor é obrigatório.',
             'tipo.required' => 'O campo tipo é obrigatório.',
             'combustivel.required' => 'O campo combustível é obrigatório.',
             'cambio.required' => 'O campo câmbio é obrigatório.',
@@ -72,16 +81,9 @@ class VeiculoController extends Controller
                 ->withInput();
         }
 
-        // Remove formatação de valores monetários se houver
-        $data = $request->all();
-        if (isset($data['preco_compra'])) {
-            $data['preco_compra'] = str_replace(['R$', '.', ','], ['', '', '.'], $data['preco_compra']);
-        }
-        $data['preco_venda'] = str_replace(['R$', '.', ','], ['', '', '.'], $data['preco_venda']);
+        Veiculo::create($request->all());
 
-        Veiculo::create($data);
-
-        return redirect()->route('veiculos.index')->with('success', 'Veículo cadastrado com sucesso!');
+        return redirect()->route('admin.veiculos.index')->with('success', 'Veículo cadastrado com sucesso!');
     }
 
     /**
@@ -89,8 +91,8 @@ class VeiculoController extends Controller
      */
     public function show($id)
     {
-        $veiculo = Veiculo::findOrFail($id);
-        return view('veiculos.show', compact('veiculo'));
+        $veiculo = Veiculo::with(['marca', 'modelo', 'cor'])->findOrFail($id);
+        return view('admin.veiculos.show', compact('veiculo'));
     }
 
     /**
@@ -99,7 +101,10 @@ class VeiculoController extends Controller
     public function edit($id)
     {
         $veiculo = Veiculo::findOrFail($id);
-        return view('veiculos.edit', compact('veiculo'));
+        $marcas = Marca::ativas()->orderBy('nome')->get();
+        $modelos = Modelo::ativas()->with('marca')->orderBy('nome')->get();
+        $cores = Cor::ativas()->orderBy('nome')->get();
+        return view('admin.veiculos.edit', compact('veiculo', 'marcas', 'modelos', 'cores'));
     }
 
     /**
@@ -110,12 +115,12 @@ class VeiculoController extends Controller
         $veiculo = Veiculo::findOrFail($id);
 
         $validator = Validator::make($request->all(), [
-            'marca' => 'required|string|max:100',
-            'modelo' => 'required|string|max:100',
+            'marca_id' => 'required|exists:marcas,id',
+            'modelo_id' => 'required|exists:modelos,id',
+            'cor_id' => 'required|exists:cores,id',
             'ano_fabricacao' => 'required|integer|min:1900|max:' . (date('Y') + 1),
             'ano_modelo' => 'required|integer|min:1900|max:' . (date('Y') + 1),
             'placa' => 'nullable|string|max:10|unique:veiculos,placa,' . $id,
-            'cor' => 'required|string|max:50',
             'tipo' => 'required|string|max:50',
             'combustivel' => 'required|string|max:50',
             'cambio' => 'required|string|max:50',
@@ -126,6 +131,9 @@ class VeiculoController extends Controller
             'status' => 'required|string|max:50',
             'categoria' => 'required|string|max:100',
             'quilometragem' => 'nullable|integer|min:0',
+            'foto1' => 'nullable|url|max:500',
+            'foto2' => 'nullable|url|max:500',
+            'foto3' => 'nullable|url|max:500',
         ]);
 
         if ($validator->fails()) {
@@ -134,16 +142,9 @@ class VeiculoController extends Controller
                 ->withInput();
         }
 
-        // Remove formatação de valores monetários se houver
-        $data = $request->all();
-        if (isset($data['preco_compra'])) {
-            $data['preco_compra'] = str_replace(['R$', '.', ','], ['', '', '.'], $data['preco_compra']);
-        }
-        $data['preco_venda'] = str_replace(['R$', '.', ','], ['', '', '.'], $data['preco_venda']);
+        $veiculo->update($request->all());
 
-        $veiculo->update($data);
-
-        return redirect()->route('veiculos.index')->with('success', 'Veículo atualizado com sucesso!');
+        return redirect()->route('admin.veiculos.index')->with('success', 'Veículo atualizado com sucesso!');
     }
 
     /**
@@ -154,7 +155,7 @@ class VeiculoController extends Controller
         $veiculo = Veiculo::findOrFail($id);
         $veiculo->delete();
 
-        return redirect()->route('veiculos.index')->with('success', 'Veículo removido com sucesso!');
+        return redirect()->route('admin.veiculos.index')->with('success', 'Veículo removido com sucesso!');
     }
 
     /**

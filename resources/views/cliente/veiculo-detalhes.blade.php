@@ -1,6 +1,6 @@
 @extends('cliente.layouts.app')
 
-@section('title', $veiculo->marca . ' ' . $veiculo->modelo . ' - AutoPrime')
+@section('title', ($veiculo->marca->nome ?? 'N/A') . ' ' . ($veiculo->modelo->nome ?? 'N/A') . ' - AutoPrime')
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('FrontCliente/css/pages/modelos.css') }}">
@@ -43,7 +43,7 @@
             <!-- Informações do Veículo -->
             <div class="col-lg-5">
                 <div class="text-white">
-                    <h1 class="display-4 fw-bold mb-3">{{ $veiculo->marca }} {{ $veiculo->modelo }}</h1>
+                    <h1 class="display-4 fw-bold mb-3">{{ $veiculo->marca->nome ?? 'N/A' }} {{ $veiculo->modelo->nome ?? 'N/A' }}</h1>
                     
                     @if($veiculo->preco_venda)
                     <h2 class="text-info mb-4">{{ $veiculo->preco_venda_formatado }}</h2>
@@ -56,7 +56,7 @@
                         </div>
                         <div class="row">
                             <div class="col-6 text-white-50">Cor:</div>
-                            <div class="col-6 text-end fw-bold">{{ $veiculo->cor }}</div>
+                            <div class="col-6 text-end fw-bold">{{ $veiculo->cor->nome ?? 'N/A' }}</div>
                         </div>
                         <div class="row">
                             <div class="col-6 text-white-50">Combustível:</div>
@@ -104,14 +104,14 @@
         <!-- Veículos Relacionados -->
         @if($relacionados->count() > 0)
         <div class="mt-5 pt-5">
-            <h3 class="text-white mb-4">Outros Veículos da {{ $veiculo->marca }}</h3>
+            <h3 class="text-white mb-4">Outros Veículos da {{ $veiculo->marca->nome ?? 'Marca' }}</h3>
             <div class="row g-4">
                 @foreach($relacionados as $relacionado)
                 <div class="col-lg-4">
                     <div class="card h-100" style="background-color: #1e2936; border: 1px solid rgba(255,255,255,0.1);">
-                        <img src="{{ asset('FrontCliente/TelaInicial/img1.jpg') }}" class="card-img-top" alt="{{ $relacionado->modelo }}">
+                        <img src="{{ asset('FrontCliente/TelaInicial/img1.jpg') }}" class="card-img-top" alt="{{ $relacionado->modelo->nome ?? 'Veículo' }}">
                         <div class="card-body text-white">
-                            <h5 class="card-title">{{ $relacionado->marca }} {{ $relacionado->modelo }}</h5>
+                            <h5 class="card-title">{{ $relacionado->marca->nome ?? 'N/A' }} {{ $relacionado->modelo->nome ?? 'N/A' }}</h5>
                             @if($relacionado->preco_venda)
                             <p class="text-info">{{ $relacionado->preco_venda_formatado }}</p>
                             @endif

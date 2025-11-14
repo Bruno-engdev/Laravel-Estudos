@@ -71,7 +71,7 @@
                              alt="{{ $veiculo->marca }} {{ $veiculo->modelo }}">
                     </div>
                     <div class="card-body">
-                        <h5 class="card-title">{{ $veiculo->marca }} {{ $veiculo->modelo }}</h5>
+                        <h5 class="card-title">{{ $veiculo->marca->nome ?? 'N/A' }} {{ $veiculo->modelo->nome ?? 'N/A' }}</h5>
                         <div class="card-info">
                             <span class="card-year">{{ $veiculo->ano_modelo }}</span>
                             <span class="card-price">R$ {{ number_format($veiculo->preco_venda, 2, ',', '.') }}</span>

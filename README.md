@@ -1,61 +1,239 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🚗 AutoPrime - Sistema de Loja de Veículos
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema completo de gerenciamento de loja de veículos desenvolvido em Laravel, com área pública para clientes e área administrativa para gestão de veículos, marcas, modelos e cores.
 
-## About Laravel
+## 📋 Sobre o Projeto
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Este projeto foi desenvolvido como trabalho acadêmico e implementa um sistema completo de e-commerce de veículos com:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Área Pública**: Vitrine de veículos com filtros, detalhes e busca
+- **Área Administrativa**: CRUD completo para gerenciamento de:
+  - Veículos
+  - Marcas
+  - Modelos
+  - Cores
+  - Clientes
+  - Categorias
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🛠️ Tecnologias Utilizadas
 
-## Learning Laravel
+- **Backend**: Laravel 12.0
+- **Frontend**: Blade Templates, Bootstrap 5.3.3, Font Awesome 6.0
+- **Banco de Dados**: MySQL
+- **PHP**: 8.2+
+- **Servidor Local**: XAMPP
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 📦 Pré-requisitos
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- PHP >= 8.2
+- Composer
+- MySQL (via XAMPP ou similar)
+- Node.js e NPM
+- Git
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🚀 Instalação e Configuração
 
-## Laravel Sponsors
+### 1. Clone o Repositório
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+git clone https://github.com/Bruno-engdev/Laravel-Estudos.git
+cd Laravel-Estudos
+```
 
-### Premium Partners
+### 2. Instale as Dependências
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```bash
+# Dependências PHP
+composer install
 
-## Contributing
+# Dependências JavaScript
+npm install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Configure o Banco de Dados
 
-## Code of Conduct
+1. Inicie o XAMPP e ative o MySQL
+2. Crie um banco de dados chamado `lojadecarros_database` no phpMyAdmin
+3. Copie o arquivo `.env.example` para `.env`:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+copy .env.example .env
+```
 
-## Security Vulnerabilities
+4. Edite o arquivo `.env` com as seguintes configurações:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=lojadecarros_database
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## License
+### 4. Gere a Chave da Aplicação
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bash
+php artisan key:generate
+```
+
+### 5. Execute as Migrations e Seeders
+
+```bash
+# Cria todas as tabelas no banco de dados
+php artisan migrate
+
+# Popula o banco com dados de exemplo
+php artisan db:seed
+```
+
+**Nota**: Os seeders criarão:
+- 1 usuário administrador
+- 8 marcas de veículos
+- 16 modelos de veículos
+- 10 cores
+- 6 veículos de exemplo
+
+### 6. Inicie o Servidor
+
+```bash
+php artisan serve
+```
+
+Acesse a aplicação em: `http://localhost:8000`
+
+## 👤 Credenciais de Acesso
+
+### Área Administrativa
+
+**URL**: `http://localhost:8000/admin/login`
+
+- **E-mail**: admin@autoprime.com
+- **Senha**: admin123
+
+## 📱 Estrutura do Projeto
+
+### Área Pública (`/`)
+
+- **Home** (`/`): Página inicial com destaques de veículos
+- **Modelos** (`/modelos`): Listagem completa de veículos com paginação
+- **Detalhes** (`/veiculo/{id}`): Informações detalhadas do veículo
+
+### Área Administrativa (`/admin`)
+
+- **Dashboard** (`/admin/dashboard`): Visão geral do sistema
+- **Veículos** (`/admin/veiculos`): CRUD completo de veículos
+- **Marcas** (`/admin/marcas`): Gerenciamento de marcas
+- **Modelos** (`/admin/modelos`): Gerenciamento de modelos
+- **Cores** (`/admin/cores`): Gerenciamento de cores
+- **Clientes** (`/admin/clientes`): Gerenciamento de clientes
+- **Categorias** (`/admin/categoria`): Gerenciamento de categorias
+
+## 🗂️ Estrutura do Banco de Dados
+
+### Tabelas Principais
+
+1. **users**: Usuários administradores
+2. **marcas**: Marcas de veículos (BMW, Toyota, etc.)
+3. **modelos**: Modelos vinculados às marcas
+4. **cores**: Cores disponíveis com código hexadecimal
+5. **veiculos**: Veículos com relacionamentos para marca, modelo e cor
+6. **clientes**: Clientes cadastrados no sistema
+
+### Relacionamentos
+
+- `veiculos` -> `marcas` (marca_id)
+- `veiculos` -> `modelos` (modelo_id)
+- `veiculos` -> `cores` (cor_id)
+- `modelos` -> `marcas` (marca_id)
+
+## 🎨 Funcionalidades Implementadas
+
+### ✅ Requisitos Acadêmicos Atendidos
+
+- [x] **Área pública** com listagem de veículos e página de detalhes
+- [x] **Área administrativa** com autenticação
+- [x] **CRUD completo** para Marca, Modelo, Cor e Veículos
+- [x] **Tabelas separadas** com relacionamentos via foreign keys
+- [x] **Templates Blade** com `@extends` e `@yield`
+- [x] **3 fotos por veículo** (campos foto1, foto2, foto3 como URLs)
+- [x] **Banco de dados normalizado** com relacionamentos
+- [x] **Interface visual** com Bootstrap e design responsivo
+- [x] **README completo** com instruções de instalação
+
+### 🌟 Funcionalidades Extras
+
+- SoftDeletes em todos os models principais
+- Validação de dados nos formulários
+- Paginação nas listagens
+- Filtros e busca de veículos
+- Dashboard com estatísticas
+- Sistema de autenticação multi-guard (admin e cliente)
+
+## 📸 Screenshots
+
+*(Adicione aqui screenshots do seu sistema após a execução)*
+
+### Página Inicial
+![Home](docs/screenshots/home.png)
+
+### Listagem de Veículos
+![Modelos](docs/screenshots/modelos.png)
+
+### Dashboard Admin
+![Dashboard](docs/screenshots/dashboard.png)
+
+### CRUD de Veículos
+![CRUD Veículos](docs/screenshots/veiculos-crud.png)
+
+## 🔄 Comandos Úteis
+
+```bash
+# Limpar cache
+php artisan cache:clear
+php artisan config:clear
+php artisan view:clear
+
+# Recriar banco de dados (apaga tudo e recria)
+php artisan migrate:fresh --seed
+
+# Ver rotas
+php artisan route:list
+
+# Ver status das migrations
+php artisan migrate:status
+```
+
+## 🐛 Solução de Problemas
+
+### Erro: "SQLSTATE[HY000] [1045] Access denied"
+
+**Solução**: Verifique se o MySQL está rodando no XAMPP e se o `DB_PASSWORD` no `.env` está vazio (para instalações padrão do XAMPP).
+
+### Erro: "Class 'Marca' not found"
+
+**Solução**: Execute `composer dump-autoload`
+
+### Página em branco após login
+
+**Solução**: Verifique se rodou `php artisan migrate` e `php artisan db:seed`
+
+## 📝 Licença
+
+Este projeto é de código aberto desenvolvido para fins acadêmicos.
+
+## 👨‍💻 Autor
+
+**Bruno**
+- GitHub: [@Bruno-engdev](https://github.com/Bruno-engdev)
+- Repositório: [Laravel-Estudos](https://github.com/Bruno-engdev/Laravel-Estudos)
+
+## 🙏 Agradecimentos
+
+Projeto desenvolvido como trabalho acadêmico para a disciplina de Desenvolvimento Web.
+
+---
+
+**Data de Criação**: Novembro de 2025  
+**Versão do Laravel**: 12.0  
+**Versão do PHP**: 8.2

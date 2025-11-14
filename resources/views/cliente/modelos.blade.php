@@ -16,9 +16,9 @@
         @forelse($veiculos as $veiculo)
         <div class="col-lg-4 col-md-6">
             <div class="card h-100" style="background-color: #1e2936; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.3);">
-                <img src="{{ asset('FrontCliente/TelaInicial/img1.jpg') }}" class="card-img-top" alt="{{ $veiculo->modelo }}">
+                <img src="{{ asset('FrontCliente/TelaInicial/img1.jpg') }}" class="card-img-top" alt="{{ $veiculo->modelo->nome ?? 'Veículo' }}">
                 <div class="card-body d-flex flex-column text-white">
-                    <h5 class="card-title text-white">{{ $veiculo->marca }} {{ $veiculo->modelo }}</h5>
+                    <h5 class="card-title text-white">{{ $veiculo->marca->nome ?? 'N/A' }} {{ $veiculo->modelo->nome ?? 'N/A' }}</h5>
                     <p class="card-text text-light">
                         @if($veiculo->descricao)
                             {{ Str::limit($veiculo->descricao, 80) }}
