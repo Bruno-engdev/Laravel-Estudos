@@ -67,16 +67,23 @@ class AdminController extends Controller
             ]);
         }
 
+        // Estatísticas para os cards (usando os status corretos da migration)
         $totalVeiculos = Veiculo::count();
-        $veiculosAtivos = Veiculo::where('status', 'ativo')->count();
+        $veiculosAtivos = Veiculo::where('status', 'Disponível')->count();
         $totalClientes = User::count();
+        
+        // Veículos recentes para visualização rápida
         $veiculosRecentes = Veiculo::latest()->take(5)->get();
+        
+        // IMPORTANTE: Todos os veículos para a tabela completa
+        $todosVeiculos = Veiculo::orderBy('created_at', 'desc')->get();
 
         return view('admin.dashboard', compact(
             'totalVeiculos',
             'veiculosAtivos', 
             'totalClientes',
-            'veiculosRecentes'
+            'veiculosRecentes',
+            'todosVeiculos'  // ← Esta variável estava faltando!
         ));
     }
 
