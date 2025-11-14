@@ -7,6 +7,7 @@
 @push('styles')
 <link rel="stylesheet" href="{{ asset('FrontCliente/css/style.css') }}">
 <link rel="stylesheet" href="{{ asset('FrontCliente/css/pages/home.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 @endpush
 
 @section('preloader')
@@ -56,27 +57,54 @@
     </div>
 </section>
 
-<!-- Seção de Veículos -->
-<section class="services text-center my-5 px-3" style="padding-top: 200px;">
-    <h2>Encontre seu veículo</h2>
-    <section class="veiculos py-5">
-        <div class="container text-center">
-            <div class="row justify-content-center g-4 flex-nowrap overflow-auto">
-                @foreach($veiculos as $veiculo)
-                <div class="col-md-4">
-                    <div class="card vehicle-card">
-                        <img src="{{ asset('FrontCliente/TelaInicial/img1.jpg') }}" class="card-img-top" alt="{{ $veiculo->modelo }}">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $veiculo->marca }} {{ $veiculo->modelo }}</h5>
-                            <p class="card-text">{{ Str::limit($veiculo->descricao, 50) }}</p>
-                            <a href="{{ route('cliente.veiculo.show', $veiculo->id) }}" class="btn btn-outline-primary">Ver Detalhes</a>
+<!-- NOVA SEÇÃO: Últimos Veículos Cadastrados -->
+<section class="latest-vehicles">
+    <div class="container">
+        <h2>Últimos <span>Veículos</span> Cadastrados</h2>
+        
+        <div class="vehicles-scroll-container">
+            <div class="vehicles-row">
+                @forelse($veiculos->take(5) as $veiculo)
+                <div class="vehicle-card-latest">
+                    <div class="card-image">
+                        <img src="{{ asset('FrontCliente/TelaInicial/img1.jpg') }}" 
+                             alt="{{ $veiculo->marca }} {{ $veiculo->modelo }}">
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $veiculo->marca }} {{ $veiculo->modelo }}</h5>
+                        <div class="card-info">
+                            <span class="card-year">{{ $veiculo->ano_modelo }}</span>
+                            <span class="card-price">R$ {{ number_format($veiculo->preco_venda, 2, ',', '.') }}</span>
                         </div>
+                        <p class="card-description">
+                            {{ $veiculo->descricao ?? 'Veículo em excelente estado de conservação.' }}
+                        </p>
+                        <a href="{{ route('cliente.veiculo.show', $veiculo->id) }}" class="btn-view">
+                            Ver Detalhes
+                        </a>
                     </div>
                 </div>
-                @endforeach
+                @empty
+                <div class="col-12 text-center">
+                    <p style="color: rgba(255,255,255,0.7);">Nenhum veículo cadastrado ainda.</p>
+                </div>
+                @endforelse
             </div>
         </div>
-    </section>
+        
+        <div class="scroll-buttons">
+            <button class="scroll-btn prev">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="scroll-btn next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        
+        <a href="{{ route('cliente.modelos') }}" class="view-all-btn">
+            Ver Todos os Veículos
+        </a>
+    </div>
 </section>
 @endsection
 
@@ -121,6 +149,77 @@ window.addEventListener('scroll', () => {
     }
 
     lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+});
+
+// JavaScript para o scroll horizontal dos veículos
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollContainer = document.querySelector('.vehicles-scroll-container');
+    const prevBtn = document.querySelector('.scroll-btn.prev');
+    const nextBtn = document.querySelector('.scroll-btn.next');
+    
+    if (scrollContainer && prevBtn && nextBtn) {
+        const cardWidth = 345; // largura do card + gap
+        
+        // Função para atualizar estado dos botões
+        function updateButtons() {
+            const scrollLeft = scrollContainer.scrollLeft;
+            const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+            
+            prevBtn.disabled = scrollLeft <= 0;
+            nextBtn.disabled = scrollLeft >= maxScroll - 10; // margem de erro
+        }
+        
+        // Scroll para esquerda
+        prevBtn.addEventListener('click', () => {
+            scrollContainer.scrollBy({
+                left: -cardWidth,
+                behavior: 'smooth'
+            });
+            setTimeout(updateButtons, 300);
+        });
+        
+        // Scroll para direita
+        nextBtn.addEventListener('click', () => {
+            scrollContainer.scrollBy({
+                left: cardWidth,
+                behavior: 'smooth'
+            });
+            setTimeout(updateButtons, 300);
+        });
+        
+        // Atualizar botões no scroll
+        scrollContainer.addEventListener('scroll', updateButtons);
+        
+        // Inicializar estado dos botões
+        updateButtons();
+        
+        // Touch/swipe support para mobile
+        let isDown = false;
+        let startX;
+        let scrollLeftStart;
+        
+        scrollContainer.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - scrollContainer.offsetLeft;
+            scrollLeftStart = scrollContainer.scrollLeft;
+        });
+        
+        scrollContainer.addEventListener('mouseleave', () => {
+            isDown = false;
+        });
+        
+        scrollContainer.addEventListener('mouseup', () => {
+            isDown = false;
+        });
+        
+        scrollContainer.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - scrollContainer.offsetLeft;
+            const walk = (x - startX) * 2;
+            scrollContainer.scrollLeft = scrollLeftStart - walk;
+        });
+    }
 });
 </script>
 @endpush

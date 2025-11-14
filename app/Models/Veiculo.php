@@ -55,12 +55,12 @@ class Veiculo extends Model
     // Accessor para formatar preço
     public function getPrecoVendaFormatadoAttribute()
     {
-        return 'R$ ' . number_format($this->preco_venda, 2, ',', '.');
+        return 'R$ ' . number_format((float) $this->preco_venda, 2, ',', '.');
     }
 
     public function getPrecoCompraFormatadoAttribute()
     {
-        return 'R$ ' . number_format($this->preco_compra, 2, ',', '.');
+        return 'R$ ' . number_format((float) $this->preco_compra, 2, ',', '.');
     }
 
     // Scope para veículos disponíveis
