@@ -66,11 +66,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/login', [AdminController::class, 'login']);
     Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
     
-    // Rotas protegidas do admin
-    Route::middleware('auth')->group(function () {
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-    });
-    
     // Rotas CRUD existentes do admin
     Route::get('/categoria', [CategoriaController::class, 'index'])->name('categoria');
     
@@ -91,18 +86,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     
     // Rotas CRUD de Cores
     Route::resource('cores', CorController::class);
-});
-
-/*
-|--------------------------------------------------------------------------
-| Rotas de Veículos
-|--------------------------------------------------------------------------
-*/
-Route::prefix('veiculos')->name('veiculos.')->group(function () {
-    Route::get('/', [VeiculoController::class, 'index'])->name('index');
-    Route::get('/create', [VeiculoController::class, 'create'])->name('create');
-    Route::post('/', [VeiculoController::class, 'store'])->name('store');
-    Route::get('/{id}', [VeiculoController::class, 'show'])->name('show');
-    Route::get('/{id}/edit', [VeiculoController::class, 'edit'])->name('edit');
-    Route::patch('/{id}/status', [VeiculoController::class, 'alterarStatus'])->name('alterar.status');
+    
+    // Rotas de Perfil do Admin
+    Route::get('/profile', [AdminController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile', [AdminController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profile/password', [AdminController::class, 'updatePassword'])->name('profile.password.update');
 });

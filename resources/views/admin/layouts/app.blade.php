@@ -334,12 +334,6 @@
         
         <nav class="sidebar-nav">
             <div class="nav-item">
-                <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span class="nav-text">Dashboard</span>
-                </a>
-            </div>
-            <div class="nav-item">
                 <a href="{{ route('admin.veiculos.index') }}" class="nav-link {{ request()->routeIs('admin.veiculos.*') ? 'active' : '' }}">
                     <i class="fas fa-car"></i>
                     <span class="nav-text">Veículos</span>
@@ -373,6 +367,12 @@
                 <a href="{{ route('admin.categoria') }}" class="nav-link {{ request()->routeIs('admin.categoria') ? 'active' : '' }}">
                     <i class="fas fa-tags"></i>
                     <span class="nav-text">Categorias</span>
+                </a>
+            </div>
+            <div class="nav-item" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <a href="{{ route('admin.profile.edit') }}" class="nav-link {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}">
+                    <i class="fas fa-user-cog"></i>
+                    <span class="nav-text">Meu Perfil</span>
                 </a>
             </div>
         </nav>

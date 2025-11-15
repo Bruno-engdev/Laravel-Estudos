@@ -15,11 +15,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Criar usuário admin
+        // Criar usuário admin principal
         User::factory()->create([
             'name' => 'Administrador',
             'email' => 'admin@autoprime.com',
             'password' => bcrypt('admin123'),
+        ]);
+
+        // Criar usuário Escobar
+        User::factory()->create([
+            'name' => 'Escobar',
+            'email' => 'Escobar@autoprime.com',
+            'password' => bcrypt('palmeirasegrande'),
         ]);
 
         // Popular dados na ordem correta (devido às foreign keys)

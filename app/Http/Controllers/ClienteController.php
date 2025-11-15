@@ -4,57 +4,94 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Cliente; // Importa o model
+use App\Models\Cliente;
+
 class ClienteController extends Controller
-{public function index()
+{
+    /**
+     * Lista todos os clientes
+     */
+    public function index()
     {
-        $clientes = cliente::all(); // Pega todos os registros da tabela 'Carros'
-        return view('admin/principal/index', compact('clientes')); // Retorna para a view com os dados
+        $clientes = Cliente::orderBy('created_at', 'desc')->get();
+        return view('admin.principal.index', compact('clientes'));
     }
 
-    public function salvarCliente(Request $request){
-    $cliente = new Cliente();
-    $cliente->nome = $request->input('nome');
-    $cliente->email = $request->input('email');
-    $cliente->telefone = $request->input('telefone');
-    $cliente->CPF = $request->input('CPF');
-    $cliente->DataNasc = $request->input('DataNasc');
-    $cliente->save();
-    return redirect('/admin/principal/index');
-}
+    /**
+     * Salva um novo cliente
+     */
+    public function salvarCliente(Request $request)
+    {
+        $request->validate([
+            'nome' => 'required|string|max:255',
+            'email' => 'required|email|unique:cliente,email',
+            'telefone' => 'nullable|string|max:20',
+            'CPF' => 'nullable|string|max:14',
+            'DataNasc' => 'nullable|date'
+        ], [
+            'nome.required' => 'O nome é obrigatório',
+            'email.required' => 'O email é obrigatório',
+            'email.email' => 'Digite um email válido',
+            'email.unique' => 'Este email já está cadastrado',
+        ]);
 
-public function alterarCliente(Request $request, $id){ 
-    // Buscar o cliente pelo ID
-    $cliente = Cliente::find($id);
-
-    // Verificar se o cliente existe
-    if(!$cliente){
-        return redirect('/admin/principal/index')->with('error', 'Cliente não encontrado.');
+        $cliente = new Cliente();
+        $cliente->nome = $request->input('nome');
+        $cliente->email = $request->input('email');
+        $cliente->telefone = $request->input('telefone');
+        $cliente->CPF = $request->input('CPF');
+        $cliente->DataNasc = $request->input('DataNasc');
+        $cliente->save();
+        
+        return redirect()->route('admin.clientes.index')->with('success', 'Cliente cadastrado com sucesso!');
     }
 
-    // Atualizar os campos
-    $cliente->nome = $request->input('nome');
-    $cliente->email = $request->input('email');
-    $cliente->telefone = $request->input('telefone');
-    $cliente->CPF = $request->input('telefone');
-    $cliente->DataNasc = $request->input('DataNasc');
-    // Salvar as alterações
-    $cliente->save();
-    return redirect('/admin/principal/index');
-}
+    /**
+     * Atualiza um cliente existente
+     */
+    public function alterarCliente(Request $request, $id)
+    { 
+        $cliente = Cliente::find($id);
 
-public function deletarCliente($id){
-    // Buscar o cliente pelo ID
-    $cliente = Cliente::find($id);
+        if (!$cliente) {
+            return redirect()->route('admin.clientes.index')->with('error', 'Cliente não encontrado.');
+        }
 
-    // Verificar se o cliente existe
-    if(!$cliente){
-        return redirect('/admin/principal/index')->with('error', 'Cliente não encontrado.');
+        $request->validate([
+            'nome' => 'required|string|max:255',
+            'email' => 'required|email|unique:cliente,email,' . $id,
+            'telefone' => 'nullable|string|max:20',
+            'CPF' => 'nullable|string|max:14',
+            'DataNasc' => 'nullable|date'
+        ], [
+            'nome.required' => 'O nome é obrigatório',
+            'email.required' => 'O email é obrigatório',
+            'email.email' => 'Digite um email válido',
+            'email.unique' => 'Este email já está cadastrado',
+        ]);
+
+        $cliente->nome = $request->input('nome');
+        $cliente->email = $request->input('email');
+        $cliente->telefone = $request->input('telefone');
+        $cliente->CPF = $request->input('CPF');
+        $cliente->DataNasc = $request->input('DataNasc');
+        $cliente->save();
+        
+        return redirect()->route('admin.clientes.index')->with('success', 'Cliente atualizado com sucesso!');
     }
 
-    // Excluir o cliente
-    $cliente->delete();
-    return redirect('/admin/principal/index');
-}
+    /**
+     * Exclui um cliente
+     */
+    public function deletarCliente($id)
+    {
+        $cliente = Cliente::find($id);
 
+        if (!$cliente) {
+            return redirect()->route('admin.clientes.index')->with('error', 'Cliente não encontrado.');
+        }
+
+        $cliente->delete();
+        return redirect()->route('admin.clientes.index')->with('success', 'Cliente excluído com sucesso!');
+    }
 }

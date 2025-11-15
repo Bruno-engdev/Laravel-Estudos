@@ -108,12 +108,12 @@
                 <label for="tipo" class="form-label">Tipo *</label>
                 <select class="form-select" id="tipo" name="tipo" required>
                     <option value="">Selecione</option>
-                    <option value="Sedan" {{ old('tipo') == 'Sedan' ? 'selected' : '' }}>Sedan</option>
-                    <option value="SUV" {{ old('tipo') == 'SUV' ? 'selected' : '' }}>SUV</option>
-                    <option value="Hatchback" {{ old('tipo') == 'Hatchback' ? 'selected' : '' }}>Hatchback</option>
-                    <option value="Picape" {{ old('tipo') == 'Picape' ? 'selected' : '' }}>Picape</option>
-                    <option value="Esportivo" {{ old('tipo') == 'Esportivo' ? 'selected' : '' }}>Esportivo</option>
-                    <option value="Minivan" {{ old('tipo') == 'Minivan' ? 'selected' : '' }}>Minivan</option>
+                    <option value="Sedan" {{ old('tipo', $veiculo->tipo) == 'Sedan' ? 'selected' : '' }}>Sedan</option>
+                    <option value="SUV" {{ old('tipo', $veiculo->tipo) == 'SUV' ? 'selected' : '' }}>SUV</option>
+                    <option value="Hatchback" {{ old('tipo', $veiculo->tipo) == 'Hatchback' ? 'selected' : '' }}>Hatchback</option>
+                    <option value="Picape" {{ old('tipo', $veiculo->tipo) == 'Picape' ? 'selected' : '' }}>Picape</option>
+                    <option value="Esportivo" {{ old('tipo', $veiculo->tipo) == 'Esportivo' ? 'selected' : '' }}>Esportivo</option>
+                    <option value="Minivan" {{ old('tipo', $veiculo->tipo) == 'Minivan' ? 'selected' : '' }}>Minivan</option>
                 </select>
             </div>
             
@@ -122,12 +122,12 @@
                 <label for="combustivel" class="form-label">Combustível *</label>
                 <select class="form-select" id="combustivel" name="combustivel" required>
                     <option value="">Selecione</option>
-                    <option value="Gasolina" {{ old('combustivel') == 'Gasolina' ? 'selected' : '' }}>Gasolina</option>
-                    <option value="Etanol" {{ old('combustivel') == 'Etanol' ? 'selected' : '' }}>Etanol</option>
-                    <option value="Flex" {{ old('combustivel') == 'Flex' ? 'selected' : '' }}>Flex</option>
-                    <option value="Diesel" {{ old('combustivel') == 'Diesel' ? 'selected' : '' }}>Diesel</option>
-                    <option value="Elétrico" {{ old('combustivel') == 'Elétrico' ? 'selected' : '' }}>Elétrico</option>
-                    <option value="Híbrido" {{ old('combustivel') == 'Híbrido' ? 'selected' : '' }}>Híbrido</option>
+                    <option value="Gasolina" {{ old('combustivel', $veiculo->combustivel) == 'Gasolina' ? 'selected' : '' }}>Gasolina</option>
+                    <option value="Etanol" {{ old('combustivel', $veiculo->combustivel) == 'Etanol' ? 'selected' : '' }}>Etanol</option>
+                    <option value="Flex" {{ old('combustivel', $veiculo->combustivel) == 'Flex' ? 'selected' : '' }}>Flex</option>
+                    <option value="Diesel" {{ old('combustivel', $veiculo->combustivel) == 'Diesel' ? 'selected' : '' }}>Diesel</option>
+                    <option value="Elétrico" {{ old('combustivel', $veiculo->combustivel) == 'Elétrico' ? 'selected' : '' }}>Elétrico</option>
+                    <option value="Híbrido" {{ old('combustivel', $veiculo->combustivel) == 'Híbrido' ? 'selected' : '' }}>Híbrido</option>
                 </select>
             </div>
             
@@ -136,10 +136,10 @@
                 <label for="cambio" class="form-label">Câmbio *</label>
                 <select class="form-select" id="cambio" name="cambio" required>
                     <option value="">Selecione</option>
-                    <option value="Manual" {{ old('cambio') == 'Manual' ? 'selected' : '' }}>Manual</option>
-                    <option value="Automático" {{ old('cambio') == 'Automático' ? 'selected' : '' }}>Automático</option>
-                    <option value="Automatizado" {{ old('cambio') == 'Automatizado' ? 'selected' : '' }}>Automatizado</option>
-                    <option value="CVT" {{ old('cambio') == 'CVT' ? 'selected' : '' }}>CVT</option>
+                    <option value="Manual" {{ old('cambio', $veiculo->cambio) == 'Manual' ? 'selected' : '' }}>Manual</option>
+                    <option value="Automático" {{ old('cambio', $veiculo->cambio) == 'Automático' ? 'selected' : '' }}>Automático</option>
+                    <option value="Automatizado" {{ old('cambio', $veiculo->cambio) == 'Automatizado' ? 'selected' : '' }}>Automatizado</option>
+                    <option value="CVT" {{ old('cambio', $veiculo->cambio) == 'CVT' ? 'selected' : '' }}>CVT</option>
                 </select>
             </div>
             
@@ -147,7 +147,7 @@
             <div class="col-md-3 mb-3">
                 <label for="portas" class="form-label">Portas *</label>
                 <input type="number" class="form-control" id="portas" name="portas" 
-                       min="2" max="5" value="{{ old('portas', 4) }}" required>
+                       min="2" max="5" value="{{ old('portas', $veiculo->portas) }}" required>
             </div>
         </div>
         
@@ -156,21 +156,21 @@
             <div class="col-md-4 mb-3">
                 <label for="motor" class="form-label">Motor *</label>
                 <input type="text" class="form-control" id="motor" name="motor" 
-                       placeholder="Ex: 2.0 Turbo" value="{{ old('motor') }}" required>
+                       placeholder="Ex: 2.0 Turbo" value="{{ old('motor', $veiculo->motor) }}" required>
             </div>
             
             <!-- Chassi -->
             <div class="col-md-4 mb-3">
                 <label for="chassi" class="form-label">Chassi</label>
                 <input type="text" class="form-control" id="chassi" name="chassi" 
-                       value="{{ old('chassi') }}">
+                       value="{{ old('chassi', $veiculo->chassi) }}">
             </div>
             
             <!-- Renavam -->
             <div class="col-md-4 mb-3">
                 <label for="renavam" class="form-label">Renavam</label>
                 <input type="text" class="form-control" id="renavam" name="renavam" 
-                       value="{{ old('renavam') }}">
+                       value="{{ old('renavam', $veiculo->renavam) }}">
             </div>
         </div>
         
@@ -179,24 +179,24 @@
             <div class="col-md-3 mb-3">
                 <label for="preco_compra" class="form-label">Preço de Compra</label>
                 <input type="number" class="form-control" id="preco_compra" name="preco_compra" 
-                       step="0.01" placeholder="0.00" value="{{ old('preco_compra') }}">
+                       step="0.01" placeholder="0.00" value="{{ old('preco_compra', $veiculo->preco_compra) }}">
             </div>
             
             <!-- Preço Venda -->
             <div class="col-md-3 mb-3">
                 <label for="preco_venda" class="form-label">Preço de Venda *</label>
                 <input type="number" class="form-control" id="preco_venda" name="preco_venda" 
-                       step="0.01" placeholder="0.00" value="{{ old('preco_venda') }}" required>
+                       step="0.01" placeholder="0.00" value="{{ old('preco_venda', $veiculo->preco_venda) }}" required>
             </div>
             
             <!-- Status -->
             <div class="col-md-3 mb-3">
                 <label for="status" class="form-label">Status *</label>
                 <select class="form-select" id="status" name="status" required>
-                    <option value="Disponível" {{ old('status') == 'Disponível' ? 'selected' : '' }}>Disponível</option>
-                    <option value="Vendido" {{ old('status') == 'Vendido' ? 'selected' : '' }}>Vendido</option>
-                    <option value="Reservado" {{ old('status') == 'Reservado' ? 'selected' : '' }}>Reservado</option>
-                    <option value="Em Manutenção" {{ old('status') == 'Em Manutenção' ? 'selected' : '' }}>Em Manutenção</option>
+                    <option value="Disponível" {{ old('status', $veiculo->status) == 'Disponível' ? 'selected' : '' }}>Disponível</option>
+                    <option value="Vendido" {{ old('status', $veiculo->status) == 'Vendido' ? 'selected' : '' }}>Vendido</option>
+                    <option value="Reservado" {{ old('status', $veiculo->status) == 'Reservado' ? 'selected' : '' }}>Reservado</option>
+                    <option value="Em Manutenção" {{ old('status', $veiculo->status) == 'Em Manutenção' ? 'selected' : '' }}>Em Manutenção</option>
                 </select>
             </div>
             
@@ -205,9 +205,9 @@
                 <label for="categoria" class="form-label">Categoria *</label>
                 <select class="form-select" id="categoria" name="categoria" required>
                     <option value="">Selecione</option>
-                    <option value="Novo" {{ old('categoria') == 'Novo' ? 'selected' : '' }}>Novo</option>
-                    <option value="Seminovo" {{ old('categoria') == 'Seminovo' ? 'selected' : '' }}>Seminovo</option>
-                    <option value="Usado" {{ old('categoria') == 'Usado' ? 'selected' : '' }}>Usado</option>
+                    <option value="Novo" {{ old('categoria', $veiculo->categoria) == 'Novo' ? 'selected' : '' }}>Novo</option>
+                    <option value="Seminovo" {{ old('categoria', $veiculo->categoria) == 'Seminovo' ? 'selected' : '' }}>Seminovo</option>
+                    <option value="Usado" {{ old('categoria', $veiculo->categoria) == 'Usado' ? 'selected' : '' }}>Usado</option>
                 </select>
             </div>
         </div>
@@ -217,21 +217,37 @@
             <div class="col-md-4 mb-3">
                 <label for="foto1" class="form-label">Foto 1 (URL)</label>
                 <input type="url" class="form-control" id="foto1" name="foto1" 
-                       placeholder="https://exemplo.com/foto1.jpg" value="{{ old('foto1') }}">
+                       placeholder="https://exemplo.com/foto1.jpg" value="{{ old('foto1', $veiculo->foto1) }}">
             </div>
             
             <!-- Foto 2 -->
             <div class="col-md-4 mb-3">
                 <label for="foto2" class="form-label">Foto 2 (URL)</label>
                 <input type="url" class="form-control" id="foto2" name="foto2" 
-                       placeholder="https://exemplo.com/foto2.jpg" value="{{ old('foto2') }}">
+                       placeholder="https://exemplo.com/foto2.jpg" value="{{ old('foto2', $veiculo->foto2) }}">
             </div>
             
             <!-- Foto 3 -->
             <div class="col-md-4 mb-3">
                 <label for="foto3" class="form-label">Foto 3 (URL)</label>
                 <input type="url" class="form-control" id="foto3" name="foto3" 
-                       placeholder="https://exemplo.com/foto3.jpg" value="{{ old('foto3') }}">
+                       placeholder="https://exemplo.com/foto3.jpg" value="{{ old('foto3', $veiculo->foto3) }}">
+            </div>
+        </div>
+        
+        <div class="row">
+            <!-- Foto 4 -->
+            <div class="col-md-6 mb-3">
+                <label for="foto4" class="form-label">Foto 4 (URL)</label>
+                <input type="url" class="form-control" id="foto4" name="foto4" 
+                       placeholder="https://exemplo.com/foto4.jpg" value="{{ old('foto4', $veiculo->foto4) }}">
+            </div>
+            
+            <!-- Foto 5 -->
+            <div class="col-md-6 mb-3">
+                <label for="foto5" class="form-label">Foto 5 (URL)</label>
+                <input type="url" class="form-control" id="foto5" name="foto5" 
+                       placeholder="https://exemplo.com/foto5.jpg" value="{{ old('foto5', $veiculo->foto5) }}">
             </div>
         </div>
         
@@ -239,7 +255,7 @@
         <div class="mb-3">
             <label for="descricao" class="form-label">Descrição</label>
             <textarea class="form-control" id="descricao" name="descricao" rows="4" 
-                      placeholder="Descreva as características e diferenciais do veículo">{{ old('descricao') }}</textarea>
+                      placeholder="Descreva as características e diferenciais do veículo">{{ old('descricao', $veiculo->descricao) }}</textarea>
         </div>
         
         <div class="d-flex justify-content-between mt-4">

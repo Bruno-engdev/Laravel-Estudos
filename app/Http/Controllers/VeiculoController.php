@@ -27,7 +27,7 @@ class VeiculoController extends Controller
     public function create()
     {
         $marcas = Marca::ativas()->orderBy('nome')->get();
-        $modelos = Modelo::ativas()->with('marca')->orderBy('nome')->get();
+        $modelos = Modelo::ativos()->with('marca')->orderBy('nome')->get();
         $cores = Cor::ativas()->orderBy('nome')->get();
         return view('admin.veiculos.create', compact('marcas', 'modelos', 'cores'));
     }
@@ -99,9 +99,9 @@ class VeiculoController extends Controller
      */
     public function edit($id)
     {
-        $veiculo = Veiculo::findOrFail($id);
+        $veiculo = Veiculo::with(['marca', 'modelo', 'cor'])->findOrFail($id);
         $marcas = Marca::ativas()->orderBy('nome')->get();
-        $modelos = Modelo::ativas()->with('marca')->orderBy('nome')->get();
+        $modelos = Modelo::ativos()->with('marca')->orderBy('nome')->get();
         $cores = Cor::ativas()->orderBy('nome')->get();
         return view('admin.veiculos.edit', compact('veiculo', 'marcas', 'modelos', 'cores'));
     }

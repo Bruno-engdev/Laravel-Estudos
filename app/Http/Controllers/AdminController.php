@@ -12,6 +12,7 @@ class AdminController extends Controller
 {
     protected $adminEmails = [
         'admin@autoprime.com',
+        'Escobar@autoprime.com',
         'admin@gmail.com',
         'bruno@autoprime.com',
         'gerente@autoprime.com',
@@ -52,7 +53,7 @@ class AdminController extends Controller
         if (Hash::check($request->password, $user->password)) {
             Auth::login($user);
             $request->session()->regenerate();
-            return redirect()->route('admin.dashboard')->with('success', 'Login realizado com sucesso!');
+            return redirect()->route('admin.veiculos.index')->with('success', 'Login realizado com sucesso!');
         }
 
         return back()->withErrors([
@@ -60,51 +61,7 @@ class AdminController extends Controller
         ])->withInput();
     }
 
-    public function dashboard()
-    {
-        if (!Auth::check() || !in_array(Auth::user()->email, $this->adminEmails)) {
-            return redirect()->route('admin.login')->withErrors([
-                'error' => 'Acesso negado. Você precisa ser um administrador.'
-            ]);
-        }
 
-        // Estatísticas para os cards
-        $totalVeiculos = Veiculo::count();
-        $veiculosAtivos = Veiculo::where('status', 'Disponível')->count();
-        $totalClientes = User::whereNotIn('email', $this->adminEmails)->count(); // Excluir admins da contagem
-        
-        // Veículos recentes para visualização rápida
-        $veiculosRecentes = Veiculo::with(['marca', 'modelo', 'cor'])
-            ->latest()
-            ->take(5)
-            ->get();
-        
-        // IMPORTANTE: Todos os veículos com relacionamentos carregados
-        $todosVeiculos = Veiculo::with(['marca', 'modelo', 'cor'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        // NOVO: Todos os clientes (excluindo admins)
-        $todosClientes = User::whereNotIn('email', $this->adminEmails)
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        // Clientes recentes
-        $clientesRecentes = User::whereNotIn('email', $this->adminEmails)
-            ->latest()
-            ->take(5)
-            ->get();
-
-        return view('admin.dashboard', compact(
-            'totalVeiculos',
-            'veiculosAtivos', 
-            'totalClientes',
-            'veiculosRecentes',
-            'todosVeiculos',
-            'todosClientes',
-            'clientesRecentes'
-        ));
-    }
 
     public function logout(Request $request)
     {
@@ -118,5 +75,78 @@ class AdminController extends Controller
     {
         $emailToCheck = $email ?: (Auth::check() ? Auth::user()->email : null);
         return $emailToCheck && in_array($emailToCheck, $this->adminEmails);
+    }
+
+    public function editProfile()
+    {
+        if (!Auth::check() || !in_array(Auth::user()->email, $this->adminEmails)) {
+            return redirect()->route('admin.login')->withErrors([
+                'error' => 'Acesso negado. Você precisa ser um administrador.'
+            ]);
+        }
+
+        $user = Auth::user();
+        return view('admin.profile.edit', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        if (!Auth::check() || !in_array(Auth::user()->email, $this->adminEmails)) {
+            return redirect()->route('admin.login')->withErrors([
+                'error' => 'Acesso negado.'
+            ]);
+        }
+
+        $user = Auth::user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+        ], [
+            'name.required' => 'O nome é obrigatório',
+            'name.max' => 'O nome não pode ter mais de 255 caracteres',
+            'email.required' => 'O email é obrigatório',
+            'email.email' => 'Digite um email válido',
+            'email.unique' => 'Este email já está em uso',
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->save();
+
+        return redirect()->route('admin.profile.edit')->with('success', 'Perfil atualizado com sucesso!');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        if (!Auth::check() || !in_array(Auth::user()->email, $this->adminEmails)) {
+            return redirect()->route('admin.login')->withErrors([
+                'error' => 'Acesso negado.'
+            ]);
+        }
+
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|min:6|confirmed',
+        ], [
+            'current_password.required' => 'A senha atual é obrigatória',
+            'password.required' => 'A nova senha é obrigatória',
+            'password.min' => 'A nova senha deve ter pelo menos 6 caracteres',
+            'password.confirmed' => 'As senhas não conferem',
+        ]);
+
+        $user = Auth::user();
+
+        // Verificar se a senha atual está correta
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors([
+                'current_password' => 'A senha atual está incorreta.'
+            ]);
+        }
+
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return redirect()->route('admin.profile.edit')->with('success', 'Senha alterada com sucesso!');
     }
 }

@@ -1,5 +1,24 @@
 # 🚗 AutoPrime - Sistema de Loja de Veículos
 
+## 👥 Desenvolvedores
+**Bruno** e **Miguel**
+
+---
+
+## 📨 Para o Professor Escobar
+
+### 🔐 Credenciais de Acesso Administrativo
+
+**URL do Site Público**: `http://localhost:8000` ou `http://127.0.0.1:8000`
+
+**URL da Área Admin**: `http://localhost:8000/admin/login` ou `http://127.0.0.1:8000/admin/login`
+
+**Credenciais para Login Admin:**
+- **E-mail**: `Escobar@autoprime.com`
+- **Senha**: `palmeirasegrande`
+
+---
+
 Sistema completo de gerenciamento de loja de veículos desenvolvido em Laravel, com área pública para clientes e área administrativa para gestão de veículos, marcas, modelos e cores.
 
 ## 📋 Sobre o Projeto
@@ -106,28 +125,39 @@ Acesse a aplicação em: `http://localhost:8000`
 
 ### Área Administrativa
 
-**URL**: `http://localhost:8000/admin/login`
+**URL do Site**: `http://localhost:8000` ou `http://127.0.0.1:8000`
 
-- **E-mail**: admin@autoprime.com
-- **Senha**: admin123
+**URL da Área Admin**: `http://localhost:8000/admin/login` ou `http://127.0.0.1:8000/admin/login`
+
+#### Usuário do Professor Escobar:
+- **E-mail**: `Escobar@autoprime.com`
+- **Senha**: `palmeirasegrande`
+
+#### Usuário Admin Alternativo:
+- **E-mail**: `admin@autoprime.com`
+- **Senha**: `admin123`
 
 ## 📱 Estrutura do Projeto
 
 ### Área Pública (`/`)
 
-- **Home** (`/`): Página inicial com destaques de veículos
-- **Modelos** (`/modelos`): Listagem completa de veículos com paginação
-- **Detalhes** (`/veiculo/{id}`): Informações detalhadas do veículo
+- **Home** (`http://localhost:8000`): Página inicial com destaques de veículos
+- **Modelos** (`http://localhost:8000/modelos`): Listagem completa de veículos com paginação
+- **Detalhes** (`http://localhost:8000/veiculo/{id}`): Informações detalhadas do veículo
 
 ### Área Administrativa (`/admin`)
 
-- **Dashboard** (`/admin/dashboard`): Visão geral do sistema
+**Acesso**: Faça login em `http://localhost:8000/admin/login` com as credenciais do Professor Escobar
+
+Após o login, você terá acesso ao menu lateral com todas as opções:
+
 - **Veículos** (`/admin/veiculos`): CRUD completo de veículos
 - **Marcas** (`/admin/marcas`): Gerenciamento de marcas
 - **Modelos** (`/admin/modelos`): Gerenciamento de modelos
 - **Cores** (`/admin/cores`): Gerenciamento de cores
 - **Clientes** (`/admin/clientes`): Gerenciamento de clientes
 - **Categorias** (`/admin/categoria`): Gerenciamento de categorias
+- **Meu Perfil** (`/admin/profile`): Edição de dados pessoais e senha
 
 ## 🗂️ Estrutura do Banco de Dados
 
@@ -222,9 +252,9 @@ php artisan migrate:status
 
 Este projeto é de código aberto desenvolvido para fins acadêmicos.
 
-## 👨‍💻 Autor
+## 👨‍💻 Autores
 
-**Bruno**
+**Bruno** e **Miguel**
 - GitHub: [@Bruno-engdev](https://github.com/Bruno-engdev)
 - Repositório: [Laravel-Estudos](https://github.com/Bruno-engdev/Laravel-Estudos)
 
@@ -232,8 +262,33 @@ Este projeto é de código aberto desenvolvido para fins acadêmicos.
 
 Projeto desenvolvido como trabalho acadêmico para a disciplina de Desenvolvimento Web.
 
+**Professor**: Escobar
+
+---
+
+## 📌 Informações Importantes para Avaliação
+
+### ✅ Como Testar o Sistema
+
+1. **Inicie o servidor**: `php artisan serve`
+2. **Acesse o site público**: `http://localhost:8000`
+3. **Acesse a área admin**: `http://localhost:8000/admin/login`
+4. **Faça login com**:
+   - Email: `Escobar@autoprime.com`
+   - Senha: `palmeiraegrande`
+5. **Explore as funcionalidades** através do menu lateral
+
+### 📊 Dados Pré-cadastrados
+
+O sistema já vem com:
+- 8 marcas de veículos
+- 16 modelos de veículos
+- 10 cores
+- 6 veículos completos com fotos e especificações
+- Usuário admin personalizado para o professor
+
 ---
 
 **Data de Criação**: Novembro de 2025  
 **Versão do Laravel**: 12.0  
-**Versão do PHP**: 8.2
+**Versão do PHP**: 8.3.8
