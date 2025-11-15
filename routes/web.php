@@ -104,11 +104,5 @@ Route::prefix('veiculos')->name('veiculos.')->group(function () {
     Route::post('/', [VeiculoController::class, 'store'])->name('store');
     Route::get('/{id}', [VeiculoController::class, 'show'])->name('show');
     Route::get('/{id}/edit', [VeiculoController::class, 'edit'])->name('edit');
-    Route::put('/{id}', [VeiculoController::class, 'update'])->name('update');
-    Route::delete('/{id}', [VeiculoController::class, 'destroy'])->name('destroy');
-    
-    // Rotas adicionais
-    Route::get('/filtrar/status', [VeiculoController::class, 'filtrarPorStatus'])->name('filtrar.status');
-    Route::get('/buscar/termo', [VeiculoController::class, 'buscar'])->name('buscar');
     Route::patch('/{id}/status', [VeiculoController::class, 'alterarStatus'])->name('alterar.status');
 });

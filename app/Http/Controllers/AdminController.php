@@ -12,6 +12,7 @@ class AdminController extends Controller
 {
     protected $adminEmails = [
         'admin@autoprime.com',
+        'admin@gmail.com',
         'bruno@autoprime.com',
         'gerente@autoprime.com',
         'supervisor@autoprime.com'
@@ -67,23 +68,41 @@ class AdminController extends Controller
             ]);
         }
 
-        // Estatísticas para os cards (usando os status corretos da migration)
+        // Estatísticas para os cards
         $totalVeiculos = Veiculo::count();
         $veiculosAtivos = Veiculo::where('status', 'Disponível')->count();
-        $totalClientes = User::count();
+        $totalClientes = User::whereNotIn('email', $this->adminEmails)->count(); // Excluir admins da contagem
         
         // Veículos recentes para visualização rápida
-        $veiculosRecentes = Veiculo::latest()->take(5)->get();
+        $veiculosRecentes = Veiculo::with(['marca', 'modelo', 'cor'])
+            ->latest()
+            ->take(5)
+            ->get();
         
-        // IMPORTANTE: Todos os veículos para a tabela completa
-        $todosVeiculos = Veiculo::orderBy('created_at', 'desc')->get();
+        // IMPORTANTE: Todos os veículos com relacionamentos carregados
+        $todosVeiculos = Veiculo::with(['marca', 'modelo', 'cor'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // NOVO: Todos os clientes (excluindo admins)
+        $todosClientes = User::whereNotIn('email', $this->adminEmails)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Clientes recentes
+        $clientesRecentes = User::whereNotIn('email', $this->adminEmails)
+            ->latest()
+            ->take(5)
+            ->get();
 
         return view('admin.dashboard', compact(
             'totalVeiculos',
             'veiculosAtivos', 
             'totalClientes',
             'veiculosRecentes',
-            'todosVeiculos'  // ← Esta variável estava faltando!
+            'todosVeiculos',
+            'todosClientes',
+            'clientesRecentes'
         ));
     }
 

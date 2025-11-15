@@ -53,6 +53,7 @@ class User extends Authenticatable
      */
     public function getFormattedCpfAttribute()
     {
+        if (!$this->cpf) return null;
         $cpf = $this->cpf;
         return substr($cpf, 0, 3) . '.' . substr($cpf, 3, 3) . '.' . substr($cpf, 6, 3) . '-' . substr($cpf, 9, 2);
     }
@@ -62,10 +63,35 @@ class User extends Authenticatable
      */
     public function getFormattedPhoneAttribute()
     {
+        if (!$this->phone) return null;
         $phone = $this->phone;
         if (strlen($phone) == 11) {
             return '(' . substr($phone, 0, 2) . ') ' . substr($phone, 2, 5) . '-' . substr($phone, 7, 4);
         }
         return $phone;
+    }
+
+    /**
+     * Verifica se o usuário é administrador
+     */
+    public function isAdmin()
+    {
+        $adminEmails = [
+            'admin@autoprime.com',
+            'admin@gmail.com',
+            'bruno@autoprime.com',
+            'gerente@autoprime.com',
+            'supervisor@autoprime.com'
+        ];
+        
+        return in_array($this->email, $adminEmails);
+    }
+
+    /**
+     * Verifica se o usuário é um cliente comum
+     */
+    public function isClient()
+    {
+        return !$this->isAdmin();
     }
 }

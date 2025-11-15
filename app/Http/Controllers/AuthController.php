@@ -54,8 +54,8 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
             
-            // Redireciona para a página inicial ou dashboard
-            return redirect()->intended('/dashboard')->with('success', 'Login realizado com sucesso!');
+            // Redireciona para o dashboard do cliente
+            return redirect()->route('cliente.dashboard')->with('success', 'Login realizado com sucesso!');
         }
 
         return redirect()->back()
@@ -113,7 +113,7 @@ class AuthController extends Controller
         // Faz login automático após o cadastro
         Auth::login($user);
 
-        return redirect('/dashboard')->with('success', 'Cadastro realizado com sucesso! Bem-vindo ao sistema!');
+        return redirect()->route('cliente.dashboard')->with('success', 'Cadastro realizado com sucesso! Bem-vindo!');
     }
 
     /**
@@ -126,15 +126,15 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         
-        return redirect('/')->with('success', 'Logout realizado com sucesso!');
+        return redirect()->route('cliente.home')->with('success', 'Você saiu da sua conta.');
     }
 
     /**
-     * Dashboard do usuário
+     * Dashboard do cliente (NÃO É ADMIN)
      */
     public function dashboard()
     {
-        $user = Auth::user();
-        return view('dashboard', compact('user'));
+        // Retorna o dashboard do CLIENTE, não do admin
+        return view('cliente.dashboard');
     }
 }

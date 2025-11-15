@@ -4,70 +4,71 @@ namespace App\Http\Controllers\Cliente;
 
 use App\Http\Controllers\Controller;
 use App\Models\Veiculo;
+use App\Models\Marca;
+use App\Models\Modelo;
+use App\Models\Cor;
 use Illuminate\Http\Request;
 
 class ClienteFrontController extends Controller
 {
     /**
-     * Exibe a página inicial (home)
+     * Página inicial da loja
      */
     public function home()
     {
-        // Pega os últimos 6 veículos disponíveis com relacionamentos
+        // Buscar alguns veículos em destaque
         $veiculos = Veiculo::with(['marca', 'modelo', 'cor'])
-                          ->where('status', 'Disponível')
-                          ->latest()
-                          ->take(6)
-                          ->get();
-        
+            ->where('status', 'Disponível')
+            ->latest()
+            ->take(6)
+            ->get();
+
         return view('cliente.home', compact('veiculos'));
     }
 
     /**
-     * Exibe a página de modelos (todos os veículos)
+     * Página de modelos
      */
     public function modelos()
     {
-        // Pega todos os veículos disponíveis com paginação e relacionamentos
+        // Buscar todos os veículos disponíveis
         $veiculos = Veiculo::with(['marca', 'modelo', 'cor'])
-                          ->where('status', 'Disponível')
-                          ->orderBy('marca_id')
-                          ->orderBy('modelo_id')
-                          ->paginate(12);
-        
-        return view('cliente.modelos', compact('veiculos'));
+            ->where('status', 'Disponível')
+            ->paginate(12);
+
+        // Buscar marcas para filtros
+        $marcas = Marca::where('ativo', true)->orderBy('nome')->get();
+
+        return view('cliente.modelos', compact('veiculos', 'marcas'));
     }
 
     /**
-     * Exibe os detalhes de um veículo específico
+     * Detalhes de um veículo específico
      */
     public function show($id)
     {
         $veiculo = Veiculo::with(['marca', 'modelo', 'cor'])->findOrFail($id);
         
-        // Veículos relacionados (mesma marca)
-        $relacionados = Veiculo::with(['marca', 'modelo', 'cor'])
-                              ->where('marca_id', $veiculo->marca_id)
-                              ->where('id', '!=', $veiculo->id)
-                              ->where('status', 'Disponível')
-                              ->take(3)
-                              ->get();
-        
-        return view('cliente.veiculo-detalhes', compact('veiculo', 'relacionados'));
+        // Veículos relacionados (mesma marca ou modelo)
+        $veiculosRelacionados = Veiculo::with(['marca', 'modelo', 'cor'])
+            ->where('status', 'Disponível')
+            ->where('id', '!=', $id)
+            ->where(function($query) use ($veiculo) {
+                $query->where('marca_id', $veiculo->marca_id)
+                      ->orWhere('modelo_id', $veiculo->modelo_id);
+            })
+            ->take(4)
+            ->get();
+
+        return view('cliente.veiculo-detalhes', compact('veiculo', 'veiculosRelacionados'));
     }
 
     /**
-     * Inscrição na newsletter
+     * Newsletter subscribe
      */
     public function newsletterSubscribe(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email'
-        ]);
-
-        // Aqui você pode salvar o email na base de dados
-        // ou enviar para um serviço de email marketing
-        
-        return back()->with('success', 'Obrigado por se inscrever!');
+        // Por enquanto, apenas retorna sucesso
+        return response()->json(['success' => true, 'message' => 'Obrigado! Você foi inscrito em nossa newsletter.']);
     }
 }

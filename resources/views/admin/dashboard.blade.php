@@ -298,6 +298,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 1rem;
+            min-width: 800px;
         }
 
         .vehicles-table thead th {
@@ -333,7 +334,18 @@
             height: 60px;
             border-radius: 8px;
             object-fit: cover;
-            border: 2px solid rgba(0, 180, 216, 0.3);
+            border: 1px solid #dee2e6;
+        }
+
+        .vehicle-placeholder {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 180, 216, 0.1);
+            border: 1px solid #dee2e6;
         }
 
         .status-badge {
@@ -382,48 +394,58 @@
         }
 
         .btn-action {
-            background: rgba(0, 180, 216, 0.1);
-            border: 1px solid rgba(0, 180, 216, 0.3);
-            color: #00b4d8;
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            transition: all 0.3s ease;
-            margin: 0 0.2rem;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            padding: 4px !important;
+            font-size: 11px !important;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            background: white;
+            color: #6c757d;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
         }
 
         .btn-action:hover {
-            background: rgba(0, 180, 216, 0.2);
-            color: #ffffff;
-            transform: scale(1.05);
+            background: #f8f9fa;
+            border-color: #00b4d8;
+            color: #00b4d8;
+            transform: translateY(-1px);
         }
 
-        .btn-logout {
-            background: linear-gradient(135deg, #dc3545, #c82333);
-            border: none;
-            color: white;
-            padding: 0.6rem 1.2rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-weight: 500;
+        .action-buttons {
+            display: flex !important;
+            gap: 4px !important;
+            flex-wrap: nowrap !important;
+            justify-content: center;
         }
 
-        .btn-logout:hover {
-            background: linear-gradient(135deg, #c82333, #bd2130);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
-        }
-
-        .empty-state {
+        .vehicles-table td:last-child {
             text-align: center;
-            padding: 3rem;
-            color: #6c757d;
+            vertical-align: middle;
         }
 
-        .empty-state i {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.3;
+        /* Scrollbar personalizada */
+        .vehicles-section::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .vehicles-section::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .vehicles-section::-webkit-scrollbar-thumb {
+            background: rgba(0, 180, 216, 0.6);
+            border-radius: 4px;
+        }
+
+        .vehicles-section::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 180, 216, 0.8);
         }
 
         @media (max-width: 768px) {
@@ -447,25 +469,17 @@
             .vehicles-table td {
                 padding: 0.6rem;
             }
-        }
 
-        /* Scrollbar personalizada */
-        .vehicles-section::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .vehicles-section::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
-
-        .vehicles-section::-webkit-scrollbar-thumb {
-            background: rgba(0, 180, 216, 0.6);
-            border-radius: 4px;
-        }
-
-        .vehicles-section::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 180, 216, 0.8);
+            .action-buttons {
+                flex-direction: column;
+                gap: 2px;
+            }
+            
+            .btn-action {
+                width: 24px;
+                height: 24px;
+                font-size: 10px !important;
+            }
         }
     </style>
 </head>
@@ -476,14 +490,6 @@
             <div class="admin-logo">AutoPrime</div>
             <div class="admin-subtitle">Painel Administrativo</div>
         </div>
-        
-        <nav class="sidebar-nav">
-            <div class="nav-item">
-                <a href="{{ route('admin.dashboard') }}" class="nav-link active">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span class="nav-text">Dashboard</span>
-                </a>
-            </div>
             <div class="nav-item">
                 <a href="#vehicles" class="nav-link">
                     <i class="fas fa-car"></i>
@@ -491,7 +497,7 @@
                 </a>
             </div>
             <div class="nav-item">
-                <a href="{{ route('admin.clientes.index') }}" class="nav-link">
+                <a href="#clients" class="nav-link">
                     <i class="fas fa-users"></i>
                     <span class="nav-text">Clientes</span>
                 </a>
@@ -614,32 +620,39 @@
                                     <th>Preço</th>
                                     <th>Status</th>
                                     <th>Cadastrado em</th>
-                                    <th>Ações</th>
+                                    <th style="min-width: 140px;">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($todosVeiculos as $veiculo)
                                     <tr>
                                         <td>
-                                            @if($veiculo->imagem ?? false)
-                                                <img src="{{ asset('storage/' . $veiculo->imagem) }}" 
-                                                     alt="{{ $veiculo->marca }} {{ $veiculo->modelo }}" 
-                                                     class="vehicle-image">
+                                            @if($veiculo->foto1)
+                                                <img src="{{ $veiculo->foto1 }}" 
+                                                     alt="{{ $veiculo->marca->nome ?? 'Marca' }} {{ $veiculo->modelo->nome ?? 'Modelo' }}" 
+                                                     class="vehicle-image"
+                                                     style="width: 60px; height: 45px; object-fit: cover; border-radius: 6px;"
+                                                     onerror="this.style.display='none'; this.parentNode.querySelector('.vehicle-placeholder').style.display='flex';">
+                                                <div class="vehicle-placeholder" style="display: none; width: 60px; height: 45px; border-radius: 6px; background: rgba(0, 180, 216, 0.1); align-items: center; justify-content: center;">
+                                                    <i class="fas fa-car text-muted"></i>
+                                                </div>
                                             @else
-                                                <div class="vehicle-image d-flex align-items-center justify-content-center" 
-                                                     style="background: rgba(0, 180, 216, 0.1);">
+                                                <div class="vehicle-placeholder" style="display: flex; width: 60px; height: 45px; border-radius: 6px; background: rgba(0, 180, 216, 0.1); align-items: center; justify-content: center;">
                                                     <i class="fas fa-car text-muted"></i>
                                                 </div>
                                             @endif
                                         </td>
                                         <td>
-                                            <strong>{{ $veiculo->marca }} {{ $veiculo->modelo }}</strong>
+                                            <strong>
+                                                {{ $veiculo->marca->nome ?? 'Marca N/A' }} 
+                                                {{ $veiculo->modelo->nome ?? 'Modelo N/A' }}
+                                            </strong>
                                             @if($veiculo->descricao)
                                                 <br><small class="text-muted">{{ Str::limit($veiculo->descricao, 50) }}</small>
                                             @endif
                                         </td>
                                         <td>{{ $veiculo->ano_fabricacao ?? $veiculo->ano_modelo ?? 'N/A' }}</td>
-                                        <td>{{ $veiculo->cor ?? 'N/A' }}</td>
+                                        <td>{{ $veiculo->cor->nome ?? 'N/A' }}</td>
                                         <td>
                                             <span class="price-tag">
                                                 R$ {{ number_format($veiculo->preco_venda ?? 0, 2, ',', '.') }}
@@ -656,15 +669,27 @@
                                         </td>
                                         <td>{{ $veiculo->created_at ? $veiculo->created_at->format('d/m/Y') : 'N/A' }}</td>
                                         <td>
-                                            <button class="btn-action" title="Visualizar">
-                                                <i class="fas fa-eye"></i>
-                                            </button>
-                                            <button class="btn-action" title="Editar">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn-action" title="Excluir" style="border-color: #dc3545; color: #dc3545;">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
+                                            <div class="action-buttons" style="display: flex; gap: 4px; flex-wrap: nowrap;">
+                                                <a href="{{ route('admin.veiculos.show', $veiculo->id) }}" 
+                                                   class="btn-action" 
+                                                   title="Visualizar"
+                                                   style="padding: 6px 8px; font-size: 12px;">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ route('admin.veiculos.edit', $veiculo->id) }}" 
+                                                   class="btn-action" 
+                                                   title="Editar"
+                                                   style="padding: 6px 8px; font-size: 12px;">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <button type="button" 
+                                                        class="btn-action" 
+                                                        title="Excluir" 
+                                                        style="padding: 6px 8px; font-size: 12px; border-color: #dc3545; color: #dc3545; background: none; border: 1px solid;"
+                                                        onclick="deleteVehicle({{ $veiculo->id }}, '{{ $veiculo->marca->nome ?? '' }} {{ $veiculo->modelo->nome ?? '' }}')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -676,6 +701,158 @@
                         <i class="fas fa-car-side"></i>
                         <h4>Nenhum veículo cadastrado</h4>
                         <p>Quando houver veículos cadastrados, eles aparecerão aqui.</p>
+                        <a href="{{ route('admin.veiculos.create') }}" class="btn btn-primary mt-3">
+                            <i class="fas fa-plus me-2"></i>Cadastrar Primeiro Veículo
+                        </a>
+                    </div>
+                @endif
+            </div>
+
+            <!-- Seção de Clientes -->
+            <div class="clients-section mt-5" id="clients">
+                <h3 class="section-title">
+                    <i class="fas fa-users me-3"></i>Todos os Clientes Cadastrados
+                </h3>
+                
+                @if(isset($todosClientes) && $todosClientes->count() > 0)
+                    <div style="overflow-x: auto;">
+                        <table class="vehicles-table">
+                            <thead>
+                                <tr>
+                                    <th>Avatar</th>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Telefone</th>
+                                    <th>CPF</th>
+                                    <th>Cadastrado em</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($todosClientes as $cliente)
+                                    <tr>
+                                        <td>
+                                            <div class="client-avatar d-flex align-items-center justify-content-center" 
+                                                 style="width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #00b4d8, #0077b6); color: white; font-weight: bold; font-size: 18px;">
+                                                {{ strtoupper(substr($cliente->name, 0, 1)) }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <strong>{{ $cliente->name }}</strong>
+                                            @if($cliente->email_verified_at)
+                                                <br><small class="text-success">
+                                                    <i class="fas fa-check-circle me-1"></i>Verificado
+                                                </small>
+                                            @else
+                                                <br><small class="text-warning">
+                                                    <i class="fas fa-clock me-1"></i>Não verificado
+                                                </small>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <a href="mailto:{{ $cliente->email }}" class="text-decoration-none">
+                                                {{ $cliente->email }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            @if($cliente->phone)
+                                                <a href="tel:{{ $cliente->phone }}" class="text-decoration-none">
+                                                    {{ $cliente->formatted_phone ?? $cliente->phone }}
+                                                </a>
+                                            @else
+                                                <span class="text-muted">Não informado</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($cliente->cpf)
+                                                {{ $cliente->formatted_cpf ?? $cliente->cpf }}
+                                            @else
+                                                <span class="text-muted">Não informado</span>
+                                            @endif
+                                        </td>
+                                        <td>{{ $cliente->created_at ? $cliente->created_at->format('d/m/Y H:i') : 'N/A' }}</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn-action" title="Visualizar Perfil" onclick="viewClient({{ $cliente->id }})">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn-action" title="Editar Cliente" onclick="editClient({{ $cliente->id }})">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn-action" title="Enviar Email" onclick="sendEmail('{{ $cliente->email }}')">
+                                                    <i class="fas fa-envelope"></i>
+                                                </button>
+                                                @if(!$cliente->email_verified_at)
+                                                    <button class="btn-action" title="Verificar Email" onclick="verifyEmail({{ $cliente->id }})" style="border-color: #28a745; color: #28a745;">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                @endif
+                                                <button class="btn-action" title="Excluir Cliente" onclick="deleteClient({{ $cliente->id }}, '{{ $cliente->name }}')" style="border-color: #dc3545; color: #dc3545;">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Estatísticas dos Clientes -->
+                    <div class="row mt-4">
+                        <div class="col-md-3">
+                            <div class="info-card">
+                                <div class="info-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
+                                    <i class="fas fa-user-check"></i>
+                                </div>
+                                <div class="info-content">
+                                    <h4>{{ $todosClientes->where('email_verified_at', '!=', null)->count() }}</h4>
+                                    <p>Clientes Verificados</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-card">
+                                <div class="info-icon" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+                                    <i class="fas fa-user-clock"></i>
+                                </div>
+                                <div class="info-content">
+                                    <h4>{{ $todosClientes->where('email_verified_at', null)->count() }}</h4>
+                                    <p>Aguardando Verificação</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-card">
+                                <div class="info-icon" style="background: linear-gradient(135deg, #17a2b8, #6f42c1);">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="info-content">
+                                    <h4>{{ $todosClientes->where('created_at', '>=', now()->subDays(30))->count() }}</h4>
+                                    <p>Novos (30 dias)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="info-card">
+                                <div class="info-icon" style="background: linear-gradient(135deg, #e83e8c, #6f42c1);">
+                                    <i class="fas fa-phone"></i>
+                                </div>
+                                <div class="info-content">
+                                    <h4>{{ $todosClientes->whereNotNull('phone')->count() }}</h4>
+                                    <p>Com Telefone</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <h4>Nenhum cliente cadastrado</h4>
+                        <p>Quando houver clientes cadastrados, eles aparecerão aqui.</p>
+                        <a href="{{ route('register') }}" class="btn btn-primary mt-3">
+                            <i class="fas fa-user-plus me-2"></i>Convidar Primeiro Cliente
+                        </a>
                     </div>
                 @endif
             </div>
@@ -711,6 +888,77 @@
                 behavior: 'smooth'
             });
         });
+
+        // Funções para ações dos clientes
+        function viewClient(clientId) {
+            // Por enquanto, mostra um alert. Você pode implementar um modal ou redirecionar para uma página
+            alert('Visualizar cliente ID: ' + clientId);
+            // Futuramente: window.location.href = '/admin/clients/' + clientId;
+        }
+
+        function editClient(clientId) {
+            // Por enquanto, mostra um alert. Você pode implementar um modal ou redirecionar para uma página
+            alert('Editar cliente ID: ' + clientId);
+            // Futuramente: window.location.href = '/admin/clients/' + clientId + '/edit';
+        }
+
+        function sendEmail(email) {
+            // Abre o cliente de email padrão
+            window.location.href = 'mailto:' + email;
+        }
+
+        function verifyEmail(clientId) {
+            if (confirm('Marcar email como verificado?')) {
+                // Aqui você implementaria uma requisição AJAX
+                alert('Funcionalidade em desenvolvimento');
+            }
+        }
+
+        function deleteClient(clientId, clientName) {
+            if (confirm('Tem certeza que deseja excluir o cliente "' + clientName + '"?\n\nEsta ação não pode ser desfeita!')) {
+                // Aqui você implementaria a exclusão
+                alert('Funcionalidade em desenvolvimento');
+            }
+        }
+
+        // Smooth scroll para seção de clientes
+        if (document.querySelector('a[href="#clients"]')) {
+            document.querySelector('a[href="#clients"]').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('clients').scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        // Função para deletar veículo
+        function deleteVehicle(vehicleId, vehicleName) {
+            if (confirm('Tem certeza que deseja excluir o veículo "' + vehicleName + '"?\n\nEsta ação não pode ser desfeita!')) {
+                // Criar e enviar formulário de exclusão
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '/admin/veiculos/' + vehicleId;
+                form.style.display = 'none';
+                
+                // Token CSRF
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const csrfInput = document.createElement('input');
+                csrfInput.type = 'hidden';
+                csrfInput.name = '_token';
+                csrfInput.value = csrfToken;
+                form.appendChild(csrfInput);
+                
+                // Method DELETE
+                const methodInput = document.createElement('input');
+                methodInput.type = 'hidden';
+                methodInput.name = '_method';
+                methodInput.value = 'DELETE';
+                form.appendChild(methodInput);
+                
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
     </script>
 </body>
 </html>

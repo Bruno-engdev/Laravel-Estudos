@@ -22,6 +22,7 @@
                     </li>
                     <li class="nav-item mx-3">
                         <a class="nav-link" href="#">Financiamento</a>
+                    </li>
                 </ul>
                 
                 <ul class="navbar-nav ms-auto align-items-center">
@@ -31,23 +32,24 @@
                     <li class="nav-item mx-3">
                         <a class="nav-link" href="#">Contato</a>
                     </li>
+                    
                     @auth
-                    <li class="nav-item mx-3">
-                        <a class="nav-link" href="{{ route('cliente.dashboard') }}">Minha Conta</a>
-                    </li>
-                    <li class="nav-item mx-3">
-                        <form action="{{ route('cliente.logout') }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="nav-link btn btn-link p-0 border-0 bg-transparent" style="color: inherit; text-decoration: none;">Sair</button>
-                        </form>
-                    </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="{{ route('cliente.dashboard') }}">Minha Conta</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <form action="{{ route('cliente.logout') }}" method="POST" class="d-inline">
+                                @csrf
+                                <button type="submit" class="nav-link btn btn-link p-0 border-0 bg-transparent" style="color: inherit; text-decoration: none;">Sair</button>
+                            </form>
+                        </li>
                     @else
-                    <li class="nav-item mx-3">
-                        <a class="nav-link" href="{{ route('cliente.login') }}">Login</a>
-                    </li>
-                    <li class="nav-item mx-3">
-                        <a class="nav-link" href="{{ route('cliente.register') }}">Cadastre-se</a>
-                    </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="{{ route('cliente.login') }}">Login</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="{{ route('cliente.register') }}">Cadastre-se</a>
+                        </li>
                     @endauth
                 </ul>
             </div>
