@@ -3,103 +3,77 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\Veiculo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    protected $adminEmails = [
-        'admin@autoprime.com',
-        'Escobar@autoprime.com',
-        'admin@gmail.com',
-        'bruno@autoprime.com',
-        'gerente@autoprime.com',
-        'supervisor@autoprime.com'
-    ];
-
     public function showLoginForm()
     {
+        if (Auth::check() && Auth::user()->isAdmin()) {
+            return redirect()->route('admin.veiculos.index');
+        }
+
         return view('admin.login');
     }
 
     public function login(Request $request)
     {
-        $request->validate([
+        $data = $request->validate([
             'email' => 'required|email',
-            'password' => 'required|min:6'
+            'password' => 'required|min:6',
         ], [
             'email.required' => 'O email é obrigatório',
             'email.email' => 'Digite um email válido',
             'password.required' => 'A senha é obrigatória',
-            'password.min' => 'A senha deve ter pelo menos 6 caracteres'
+            'password.min' => 'A senha deve ter pelo menos 6 caracteres',
         ]);
 
-        if (!in_array($request->email, $this->adminEmails)) {
+        $user = User::where('email', $data['email'])->first();
+
+        if (! $user || ! $user->isAdmin() || ! Hash::check($data['password'], $user->password)) {
             return back()->withErrors([
-                'email' => 'Este email não possui permissão de administrador.'
-            ])->withInput();
+                'email' => 'Credenciais inválidas ou usuário sem permissão de administrador.',
+            ])->withInput($request->except('password'));
         }
 
-        $user = User::where('email', $request->email)->first();
+        Auth::login($user, $request->boolean('remember'));
+        $request->session()->regenerate();
 
-        if (!$user) {
-            return back()->withErrors([
-                'email' => 'Credenciais inválidas.'
-            ])->withInput();
-        }
-
-        if (Hash::check($request->password, $user->password)) {
-            Auth::login($user);
-            $request->session()->regenerate();
-            return redirect()->route('admin.veiculos.index')->with('success', 'Login realizado com sucesso!');
-        }
-
-        return back()->withErrors([
-            'email' => 'Credenciais inválidas.'
-        ])->withInput();
+        return redirect()->route('admin.veiculos.index')
+            ->with('success', 'Login realizado com sucesso!');
     }
-
-
 
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+
         return redirect()->route('admin.login')->with('success', 'Logout realizado com sucesso!');
     }
 
-    public function isAdmin($email = null)
+    public function isAdmin(?string $email = null): bool
     {
-        $emailToCheck = $email ?: (Auth::check() ? Auth::user()->email : null);
-        return $emailToCheck && in_array($emailToCheck, $this->adminEmails);
+        if ($email !== null) {
+            $user = User::where('email', $email)->first();
+            return $user ? $user->isAdmin() : false;
+        }
+
+        return Auth::check() && Auth::user()->isAdmin();
     }
 
     public function editProfile()
     {
-        if (!Auth::check() || !in_array(Auth::user()->email, $this->adminEmails)) {
-            return redirect()->route('admin.login')->withErrors([
-                'error' => 'Acesso negado. Você precisa ser um administrador.'
-            ]);
-        }
-
-        $user = Auth::user();
-        return view('admin.profile.edit', compact('user'));
+        return view('admin.profile.edit', ['user' => Auth::user()]);
     }
 
     public function updateProfile(Request $request)
     {
-        if (!Auth::check() || !in_array(Auth::user()->email, $this->adminEmails)) {
-            return redirect()->route('admin.login')->withErrors([
-                'error' => 'Acesso negado.'
-            ]);
-        }
-
         $user = Auth::user();
 
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
         ], [
@@ -110,22 +84,15 @@ class AdminController extends Controller
             'email.unique' => 'Este email já está em uso',
         ]);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->save();
+        $user->update($data);
 
-        return redirect()->route('admin.profile.edit')->with('success', 'Perfil atualizado com sucesso!');
+        return redirect()->route('admin.profile.edit')
+            ->with('success', 'Perfil atualizado com sucesso!');
     }
 
     public function updatePassword(Request $request)
     {
-        if (!Auth::check() || !in_array(Auth::user()->email, $this->adminEmails)) {
-            return redirect()->route('admin.login')->withErrors([
-                'error' => 'Acesso negado.'
-            ]);
-        }
-
-        $request->validate([
+        $data = $request->validate([
             'current_password' => 'required',
             'password' => 'required|min:6|confirmed',
         ], [
@@ -137,16 +104,16 @@ class AdminController extends Controller
 
         $user = Auth::user();
 
-        // Verificar se a senha atual está correta
-        if (!Hash::check($request->current_password, $user->password)) {
+        if (! Hash::check($data['current_password'], $user->password)) {
             return back()->withErrors([
-                'current_password' => 'A senha atual está incorreta.'
+                'current_password' => 'A senha atual está incorreta.',
             ]);
         }
 
-        $user->password = Hash::make($request->password);
+        $user->password = $data['password']; // cast 'hashed' faz o hash automaticamente
         $user->save();
 
-        return redirect()->route('admin.profile.edit')->with('success', 'Senha alterada com sucesso!');
+        return redirect()->route('admin.profile.edit')
+            ->with('success', 'Senha alterada com sucesso!');
     }
 }

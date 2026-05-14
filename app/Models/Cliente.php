@@ -12,7 +12,7 @@ class Cliente extends Authenticatable implements MustVerifyEmail
 {
     use HasFactory, Notifiable, SoftDeletes;
 
-    protected $table = 'cliente';
+    protected $table = 'clientes';
 
     /**
      * Campos que podem ser preenchidos em massa (mass assignment)
@@ -40,13 +40,10 @@ class Cliente extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'DataNasc' => 'date',
+        'password' => 'hashed',
     ];
 
-    /**
-     * Relacionamento: Um cliente pode ter vários veículos
-     */
-    public function veiculos()
-    {
-        return $this->hasMany(Veiculo::class, 'cliente_id');
-    }
+    // Observação: a FK cliente_id em veiculos não foi criada nas migrations.
+    // O relacionamento foi removido para evitar erros em runtime. Se necessário,
+    // crie uma migration adicionando 'cliente_id' em veiculos e re-adicione aqui.
 }

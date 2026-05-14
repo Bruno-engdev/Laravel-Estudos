@@ -16,7 +16,7 @@ class AuthController extends Controller
      */
     public function showLoginForm()
     {
-        return view('cliente.Login');
+        return view('cliente.login');
     }
 
     /**
@@ -24,7 +24,7 @@ class AuthController extends Controller
      */
     public function showRegisterForm()
     {
-        return view('cliente.Cadastro');
+        return view('cliente.cadastro');
     }
 
     /**
@@ -108,6 +108,7 @@ class AuthController extends Controller
             'phone' => $phone,
             'cpf' => $cpf,
             'password' => Hash::make($request->password),
+            'is_admin' => false,
         ]);
 
         // Faz login automático após o cadastro

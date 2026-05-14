@@ -5,17 +5,30 @@
 
 ---
 
-## 📨 Para o Professor Escobar
+## � Acesso Administrativo
 
-### 🔐 Credenciais de Acesso Administrativo
+A área administrativa fica em `/admin/login`. Não há credenciais padrão versionadas neste repositório por motivos de segurança.
 
-**URL do Site Público**: `http://localhost:8000` ou `http://127.0.0.1:8000`
+Para criar o usuário administrador inicial, defina no seu arquivo `.env`:
 
-**URL da Área Admin**: `http://localhost:8000/admin/login` ou `http://127.0.0.1:8000/admin/login`
+```env
+ADMIN_NAME=Administrador
+ADMIN_EMAIL=admin@seudominio.com
+ADMIN_PASSWORD=uma-senha-forte-aqui
+```
 
-**Credenciais para Login Admin:**
-- **E-mail**: `Escobar@autoprime.com`
-- **Senha**: `palmeirasegrande`
+E em seguida rode:
+
+```bash
+php artisan db:seed
+```
+
+O `DatabaseSeeder` lerá essas variáveis e criará/atualizará o usuário com `is_admin = true`. Para promover um usuário existente manualmente:
+
+```bash
+php artisan tinker
+>>> \App\Models\User::where('email','foo@bar.com')->update(['is_admin' => true]);
+```
 
 ---
 

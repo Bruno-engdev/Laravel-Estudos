@@ -22,3 +22,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+/lojadecarros_database
+*.sql
+*.sqlite
+*.sqlite-journal

@@ -363,12 +363,6 @@
                     <span class="nav-text">Clientes</span>
                 </a>
             </div>
-            <div class="nav-item">
-                <a href="{{ route('admin.categoria') }}" class="nav-link {{ request()->routeIs('admin.categoria') ? 'active' : '' }}">
-                    <i class="fas fa-tags"></i>
-                    <span class="nav-text">Categorias</span>
-                </a>
-            </div>
             <div class="nav-item" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
                 <a href="{{ route('admin.profile.edit') }}" class="nav-link {{ request()->routeIs('admin.profile.*') ? 'active' : '' }}">
                     <i class="fas fa-user-cog"></i>

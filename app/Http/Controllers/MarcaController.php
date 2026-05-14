@@ -46,7 +46,7 @@ class MarcaController extends Controller
                 ->withInput();
         }
 
-        Marca::create($request->all());
+        Marca::create($validator->validated());
 
         return redirect()->route('admin.marcas.index')->with('success', 'Marca cadastrada com sucesso!');
     }
@@ -89,7 +89,7 @@ class MarcaController extends Controller
                 ->withInput();
         }
 
-        $marca->update($request->all());
+        $marca->update($validator->validated());
 
         return redirect()->route('admin.marcas.index')->with('success', 'Marca atualizada com sucesso!');
     }

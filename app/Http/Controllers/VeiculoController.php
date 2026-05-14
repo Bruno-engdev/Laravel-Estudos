@@ -80,7 +80,7 @@ class VeiculoController extends Controller
                 ->withInput();
         }
 
-        Veiculo::create($request->all());
+        Veiculo::create($validator->validated());
 
         return redirect()->route('admin.veiculos.index')->with('success', 'Veículo cadastrado com sucesso!');
     }
@@ -141,7 +141,7 @@ class VeiculoController extends Controller
                 ->withInput();
         }
 
-        $veiculo->update($request->all());
+        $veiculo->update($validator->validated());
 
         return redirect()->route('admin.veiculos.index')->with('success', 'Veículo atualizado com sucesso!');
     }
@@ -155,51 +155,5 @@ class VeiculoController extends Controller
         $veiculo->delete();
 
         return redirect()->route('admin.veiculos.index')->with('success', 'Veículo removido com sucesso!');
-    }
-
-    /**
-     * Filtrar veículos por status
-     */
-    public function filtrarPorStatus(Request $request)
-    {
-        $status = $request->get('status', 'todos');
-        
-        $query = Veiculo::query();
-        
-        if ($status !== 'todos') {
-            $query->where('status', $status);
-        }
-        
-        $veiculos = $query->orderBy('created_at', 'desc')->paginate(10);
-        
-        return view('veiculos.index', compact('veiculos', 'status'));
-    }
-
-    /**
-     * Buscar veículos
-     */
-    public function buscar(Request $request)
-    {
-        $termo = $request->get('busca');
-        
-        $veiculos = Veiculo::where('marca', 'LIKE', "%{$termo}%")
-            ->orWhere('modelo', 'LIKE', "%{$termo}%")
-            ->orWhere('placa', 'LIKE', "%{$termo}%")
-            ->orWhere('cor', 'LIKE', "%{$termo}%")
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-        
-        return view('veiculos.index', compact('veiculos', 'termo'));
-    }
-
-    /**
-     * Alterar status do veículo
-     */
-    public function alterarStatus(Request $request, $id)
-    {
-        $veiculo = Veiculo::findOrFail($id);
-        $veiculo->update(['status' => $request->status]);
-        
-        return redirect()->back()->with('success', 'Status alterado com sucesso!');
     }
 }

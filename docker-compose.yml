@@ -1,0 +1,72 @@
+name: autoprime
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: autoprime/app:latest
+    container_name: autoprime-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_NAME: ${APP_NAME:-AutoPrime}
+      APP_ENV: ${APP_ENV:-production}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_URL: ${APP_URL:-http://localhost:8080}
+      APP_KEY: ${APP_KEY:-}
+      LOG_CHANNEL: stack
+      LOG_LEVEL: ${LOG_LEVEL:-warning}
+
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-autoprime}
+      DB_USERNAME: ${DB_USERNAME:-autoprime}
+      DB_PASSWORD: ${DB_PASSWORD:-secret}
+
+      SESSION_DRIVER: database
+      CACHE_STORE: database
+      QUEUE_CONNECTION: database
+
+      ADMIN_NAME: ${ADMIN_NAME:-Administrador}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@autoprime.local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+
+      RUN_MIGRATIONS: "true"
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    volumes:
+      - app-storage:/var/www/html/storage
+    networks:
+      - autoprime
+
+  db:
+    image: mysql:8.4
+    container_name: autoprime-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-autoprime}
+      MYSQL_USER: ${DB_USERNAME:-autoprime}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-secret}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootsecret}
+    command: ["--default-authentication-plugin=caching_sha2_password"]
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${DB_ROOT_PASSWORD:-rootsecret}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - autoprime
+
+volumes:
+  db-data:
+  app-storage:
+
+networks:
+  autoprime:
+    driver: bridge

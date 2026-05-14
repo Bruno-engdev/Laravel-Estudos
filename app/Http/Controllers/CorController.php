@@ -46,7 +46,7 @@ class CorController extends Controller
                 ->withInput();
         }
 
-        Cor::create($request->all());
+        Cor::create($validator->validated());
 
         return redirect()->route('admin.cores.index')->with('success', 'Cor cadastrada com sucesso!');
     }
@@ -88,7 +88,7 @@ class CorController extends Controller
                 ->withInput();
         }
 
-        $cor->update($request->all());
+        $cor->update($validator->validated());
 
         return redirect()->route('admin.cores.index')->with('success', 'Cor atualizada com sucesso!');
     }

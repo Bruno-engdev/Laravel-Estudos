@@ -50,7 +50,7 @@ class ModeloController extends Controller
                 ->withInput();
         }
 
-        Modelo::create($request->all());
+        Modelo::create($validator->validated());
 
         return redirect()->route('admin.modelos.index')->with('success', 'Modelo cadastrado com sucesso!');
     }
@@ -95,7 +95,7 @@ class ModeloController extends Controller
                 ->withInput();
         }
 
-        $modelo->update($request->all());
+        $modelo->update($validator->validated());
 
         return redirect()->route('admin.modelos.index')->with('success', 'Modelo atualizado com sucesso!');
     }

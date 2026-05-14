@@ -23,6 +23,7 @@ class User extends Authenticatable
         'phone',
         'cpf',
         'password',
+        'is_admin',
     ];
 
     /**
@@ -45,6 +46,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
     }
 
@@ -74,24 +76,16 @@ class User extends Authenticatable
     /**
      * Verifica se o usuário é administrador
      */
-    public function isAdmin()
+    public function isAdmin(): bool
     {
-        $adminEmails = [
-            'admin@autoprime.com',
-            'admin@gmail.com',
-            'bruno@autoprime.com',
-            'gerente@autoprime.com',
-            'supervisor@autoprime.com'
-        ];
-        
-        return in_array($this->email, $adminEmails);
+        return (bool) $this->is_admin;
     }
 
     /**
      * Verifica se o usuário é um cliente comum
      */
-    public function isClient()
+    public function isClient(): bool
     {
-        return !$this->isAdmin();
+        return ! $this->isAdmin();
     }
 }

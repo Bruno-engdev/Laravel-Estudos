@@ -1,14 +1,13 @@
 <?php
 
-use App\Http\Controllers\CategoriaController;
-use App\Http\Controllers\ClienteController;
-use App\Http\Controllers\Cliente\ClienteFrontController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\VeiculoController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Cliente\ClienteFrontController;
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\CorController;
 use App\Http\Controllers\MarcaController;
 use App\Http\Controllers\ModeloController;
-use App\Http\Controllers\CorController;
+use App\Http\Controllers\VeiculoController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,28 +31,14 @@ Route::prefix('cliente')->name('cliente.')->group(function () {
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-    
-    // Rotas protegidas por autenticação
+
     Route::middleware('auth')->group(function () {
         Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
     });
 });
 
-/*
-|--------------------------------------------------------------------------
-| Rotas de Autenticação Geral (Mantidas para compatibilidade)
-|--------------------------------------------------------------------------
-*/
+// Aliases mínimos exigidos pelo Laravel/middleware (ex.: redirecionamento padrão).
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// Rotas protegidas por autenticação
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
-});
 
 /*
 |--------------------------------------------------------------------------
@@ -61,34 +46,29 @@ Route::middleware('auth')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::prefix('admin')->name('admin.')->group(function () {
-    // Rotas de autenticação do admin
+    // Login do admin (sem middleware admin, para permitir autenticar)
     Route::get('/login', [AdminController::class, 'showLoginForm'])->name('login');
     Route::post('/login', [AdminController::class, 'login']);
-    Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
-    
-    // Rotas CRUD existentes do admin
-    Route::get('/categoria', [CategoriaController::class, 'index'])->name('categoria');
-    
-    // Rotas CRUD de Clientes (Admin)
-    Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
-    Route::post('/clientes', [ClienteController::class, 'salvarCliente'])->name('clientes.store');
-    Route::put('/clientes/{id}', [ClienteController::class, 'alterarCliente'])->name('clientes.update');
-    Route::delete('/clientes/{id}', [ClienteController::class, 'deletarCliente'])->name('clientes.destroy');
-    
-    // Rotas CRUD de Veículos
-    Route::resource('veiculos', VeiculoController::class);
-    
-    // Rotas CRUD de Marcas
-    Route::resource('marcas', MarcaController::class);
-    
-    // Rotas CRUD de Modelos
-    Route::resource('modelos', ModeloController::class);
-    
-    // Rotas CRUD de Cores
-    Route::resource('cores', CorController::class);
-    
-    // Rotas de Perfil do Admin
-    Route::get('/profile', [AdminController::class, 'editProfile'])->name('profile.edit');
-    Route::put('/profile', [AdminController::class, 'updateProfile'])->name('profile.update');
-    Route::put('/profile/password', [AdminController::class, 'updatePassword'])->name('profile.password.update');
+
+    // Tudo abaixo exige autenticação + papel admin
+    Route::middleware(['auth', 'admin'])->group(function () {
+        Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
+
+        // Clientes
+        Route::get('/clientes', [ClienteController::class, 'index'])->name('clientes.index');
+        Route::post('/clientes', [ClienteController::class, 'salvarCliente'])->name('clientes.store');
+        Route::put('/clientes/{id}', [ClienteController::class, 'alterarCliente'])->name('clientes.update');
+        Route::delete('/clientes/{id}', [ClienteController::class, 'deletarCliente'])->name('clientes.destroy');
+
+        // CRUDs principais
+        Route::resource('veiculos', VeiculoController::class);
+        Route::resource('marcas', MarcaController::class);
+        Route::resource('modelos', ModeloController::class);
+        Route::resource('cores', CorController::class);
+
+        // Perfil do admin
+        Route::get('/profile', [AdminController::class, 'editProfile'])->name('profile.edit');
+        Route::put('/profile', [AdminController::class, 'updateProfile'])->name('profile.update');
+        Route::put('/profile/password', [AdminController::class, 'updatePassword'])->name('profile.password.update');
+    });
 });
